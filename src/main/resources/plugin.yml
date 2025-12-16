@@ -2,3 +2,13 @@ name: ElytraFly
 version: '1.0-SNAPSHOT'
 main: cn.ericcraft.elytraFly.ElytraFly
 api-version: '1.21'
+author: Eric
+description: A plugin that allows players to fly with elytra.
+commands:
+  fly:
+    description: Enables creative flight mode while wearing elytra.
+    usage: /fly
+permissions:
+  elytrafly.use:
+    description: 允许使用 /fly 指令开启鞘翅飞行模式
+    default: op
