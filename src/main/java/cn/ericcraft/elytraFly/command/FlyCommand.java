@@ -59,15 +59,15 @@ public class FlyCommand implements CommandExecutor {
                 player.setAllowFlight(false);
                 player.setFlying(false);
                 flightManager.removePlayer(player.getUniqueId());
-                player.sendMessage(ChatColor.GREEN + "鞘翅飞行模式已关闭。");
+                player.sendMessage(ChatColor.AQUA + "[飞行系统] " + ChatColor.GREEN + "鞘翅飞行模式已关闭。");
             } else {
                 // 如果未在飞行，则开启飞行
                 player.setAllowFlight(true);
                 flightManager.addPlayer(player.getUniqueId());
-                player.sendMessage(ChatColor.GREEN + "鞘翅飞行模式已开启！");
+                player.sendMessage(ChatColor.AQUA + "[飞行系统] " + ChatColor.GREEN + "鞘翅飞行模式已开启！");
             }
         } else {
-            player.sendMessage(ChatColor.RED + "你必须穿戴鞘翅才能使用此指令。");
+            player.sendMessage(ChatColor.AQUA + "[飞行系统] " + ChatColor.RED + "你必须穿戴鞘翅才能使用此指令。");
         }
         return true;
     }
