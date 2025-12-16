@@ -1,6 +1,7 @@
 package cn.ericcraft.elytraFly;
 
 import cn.ericcraft.elytraFly.command.FlyCommand;
+import cn.ericcraft.elytraFly.listener.PlayerDeathListener;
 import cn.ericcraft.elytraFly.manager.FlightManager;
 import cn.ericcraft.elytraFly.task.FlightCheckTask;
 import org.bukkit.Bukkit;
@@ -25,6 +26,9 @@ public final class ElytraFly extends JavaPlugin {
 
         // 注册 /fly 指令，并将飞行管理器注入到指令执行器中
         this.getCommand("fly").setExecutor(new FlyCommand(flightManager));
+
+        // 注册玩家死亡监听器, 并传入插件实例用于调度器
+        getServer().getPluginManager().registerEvents(new PlayerDeathListener(flightManager, this), this);
 
         // 启动飞行检查任务，并将飞行管理器注入
         new FlightCheckTask(flightManager).runTaskTimer(this, 0L, 20L); // 每秒检查一次
