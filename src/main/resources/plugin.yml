@@ -1,0 +1,4 @@
+name: ElytraFly
+version: '1.0-SNAPSHOT'
+main: cn.ericcraft.elytraFly.ElytraFly
+api-version: '1.21'
