@@ -54,7 +54,7 @@ public class FlightCheckTask extends BukkitRunnable {
                 player.setAllowFlight(false);
                 player.setFlying(false);
                 iterator.remove();
-                player.sendMessage(ChatColor.RED + "你已不再穿戴鞘翅，飞行模式已关闭。");
+                player.sendMessage(ChatColor.AQUA + "[飞行系统] " + ChatColor.RED + "你已不再穿戴鞘翅，飞行模式已关闭。");
                 continue;
             }
 
@@ -85,7 +85,7 @@ public class FlightCheckTask extends BukkitRunnable {
                             player.setAllowFlight(false);
                             player.setFlying(false);
                             iterator.remove();
-                            player.sendMessage(ChatColor.RED + "你的鞘翅已经损坏！飞行模式已关闭。");
+                            player.sendMessage(ChatColor.AQUA + "[飞行系统] " + ChatColor.RED + "你的鞘翅已经损坏！飞行模式已关闭。");
                             // 播放物品损坏的声音，给玩家明确的反馈
                             player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
                         }

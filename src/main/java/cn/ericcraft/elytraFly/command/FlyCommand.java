@@ -36,7 +36,7 @@ public class FlyCommand implements CommandExecutor {
 
         // 检查玩家是否拥有 elytrafly.use 权限
         if (!player.hasPermission("elytrafly.use")) {
-            player.sendMessage(ChatColor.RED + "你没有权限使用此指令。");
+            player.sendMessage(ChatColor.AQUA + "[飞行系统] " + ChatColor.RED + "你没有权限使用此指令。");
             return true;
         }
 
@@ -48,7 +48,7 @@ public class FlyCommand implements CommandExecutor {
             // 检查鞘翅是否已经损坏
             if (chestplate.getItemMeta() instanceof Damageable) {
                 if (((Damageable) chestplate.getItemMeta()).getDamage() >= chestplate.getType().getMaxDurability()) {
-                    player.sendMessage(ChatColor.RED + "你的鞘翅已经损坏，无法飞行！");
+                    player.sendMessage(ChatColor.AQUA + "[飞行系统] " + ChatColor.RED + "你的鞘翅已经损坏，无法飞行！");
                     return true;
                 }
             }
