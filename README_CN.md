@@ -1,5 +1,4 @@
 # ElytraFly 鞘翅飞行插件
-
 [![许可证: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [English](README.md) | **中文**
