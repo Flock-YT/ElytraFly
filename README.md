@@ -1,38 +1,36 @@
 # ElytraFly
 
+[![Build Status](https://github.com/your-username/your-repo-name/actions/workflows/build-and-release.yml/badge.svg)](https://github.com/your-username/your-repo-name/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 **English** | [中文](README_CN.md)
 
-ElytraFly is a lightweight Spigot plugin designed for Minecraft 1.21+. It allows players equipped with an Elytra to toggle creative-like flight mode using a command, while maintaining balanced gameplay mechanics.
+ElytraFly is a lightweight and balanced Spigot plugin for Minecraft 1.21+ that enhances the Elytra experience. It allows players to toggle creative-like flight with a simple command, while preserving vanilla-style durability mechanics.
 
-## Features
+## ✨ Features
 
 *   **Creative Flight**: Toggle flight mode with `/fly` while wearing an Elytra.
-*   **Realistic Durability**:
+*   **Vanilla-Friendly Durability**:
     *   Durability is consumed only when the player is actually flying.
-    *   Fully supports the vanilla **Unbreaking** enchantment algorithm (chance to consume durability = `1 / (level + 1)`).
-*   **Smart Checks**:
-    *   Flight mode is automatically disabled if the player unequips the Elytra or swaps it for another item (e.g., a chestplate).
-    *   Flight is disabled immediately if the Elytra breaks during flight.
-*   **Permission System**: Control who can use the flight ability.
-*   **Localization**: Full Chinese feedback messages and code comments.
+    *   Perfectly mimics the vanilla **Unbreaking** enchantment formula (`1 / (level + 1)` chance).
+*   **Smart & Safe**:
+    *   Flight is automatically disabled if the Elytra is unequipped or breaks mid-air.
+    *   Handles server restarts, player deaths, and world changes gracefully to prevent exploits.
+*   **Permission-Ready**: A simple permission node (`elytrafly.use`) to control access.
 
-## Commands
+## 📋 Requirements
 
-*   `/fly` - Toggles Elytra flight mode on or off.
-    *   **Requirement**: Must be wearing an Elytra.
+*   **Server**: Spigot / Paper 1.21 or higher.
+*   **Java**: Version 21 or newer.
 
-## Permissions
+## 🚀 Installation
 
-*   `elytrafly.use` - Allows access to the `/fly` command.
-    *   **Default**: OP only.
-
-## Installation
-
-1.  Download the plugin `.jar` file.
+1.  Download the latest `.jar` from the [Releases page](https://github.com/your-username/your-repo-name/releases).
 2.  Place it into your server's `plugins` folder.
 3.  Restart the server.
 
-## Requirements
+## 🎮 Commands & Permissions
 
-*   Spigot/Paper 1.21 or higher.
-*   Java 21 (or compatible version for your server software).
+| Command | Permission        | Description                  | Default |
+|---------|-------------------|------------------------------|---------|
+| `/fly`  | `elytrafly.use`   | Toggles creative Elytra flight. | OP      |
