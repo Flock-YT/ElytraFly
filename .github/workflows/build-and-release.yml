@@ -1,16 +1,14 @@
 name: Build and Release Bukkit Plugin
 
+# 触发器：当一个格式为 v*.*.* 的新标签被推送到仓库时运行
 on:
   push:
-    branches:
-      - master
-    paths:
-      - '.github/workflows/**'
+    tags:
+      - 'v*.*.*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -20,41 +18,25 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '21'
-
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-maven
+          cache: 'maven'
 
       - name: Build with Maven
         run: mvn -B clean package
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-jar
+          path: target/*.jar
 
   release:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
         with:
-          distribution: 'adopt'
-          java-version: '21'
-
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-maven
-
-      - name: Build with Maven
-        run: mvn -B clean package
+          name: plugin-jar
 
       - name: Create GitHub Release
         id: create_release
@@ -62,17 +44,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.2
-          release_name: Release v1.2
+          # 从触发的标签名动态获取版本号和发布名称
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
 
-      - name: Upload Artifact
+      - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/ElytraFly-1.2.jar
-          asset_name: ElytraFly-1.2.jar
+          # 使用通配符查找 .jar 文件，避免硬编码
+          asset_path: ElytraFly-*.jar
+          asset_name: ElytraFly-${{ github.ref_name }}.jar
           asset_content_type: application/java-archive
