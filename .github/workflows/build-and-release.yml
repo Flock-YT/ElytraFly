@@ -1,10 +1,10 @@
 name: Build and Release Bukkit Plugin
 
-# 触发器：当一个格式为 v*.*.* 的新标签被推送到仓库时运行
+# 触发器：当代码被推送到 master 分支时运行
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - master
 
 jobs:
   build:
@@ -21,13 +21,14 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
+        # 确保 pom.xml 中的版本是 1.0.2
         run: mvn -B clean package
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: plugin-jar
-          path: target/*.jar
+          path: target/ElytraFly-1.0.2.jar
 
   release:
     needs: build
@@ -44,9 +45,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          # 从触发的标签名动态获取版本号和发布名称
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref_name }}
+          # 硬编码版本号和发布名称
+          tag_name: v1.0.2
+          release_name: Release v1.0.2
           draft: false
           prerelease: false
 
@@ -56,7 +57,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          # 使用通配符查找 .jar 文件，避免硬编码
-          asset_path: ElytraFly-*.jar
-          asset_name: ElytraFly-${{ github.ref_name }}.jar
+          # 硬编码资源路径和名称
+          asset_path: ElytraFly-1.0.2.jar
+          asset_name: ElytraFly-1.0.2.jar
           asset_content_type: application/java-archive
