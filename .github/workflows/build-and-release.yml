@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+    # 路径过滤器：只有当这个文件本身被修改时，才触发工作流
+    paths:
+      - '.github/workflows/build-and-release.yml'
 
 jobs:
   build:
@@ -26,7 +29,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: plugin-jar
-          # 使用通配符，无论版本号是 1.0.2 还是 1.0.2-SNAPSHOT 都能匹配到
+          # 使用通配符，无论版本号是什么都能匹配到
           path: target/*.jar
 
   release:
@@ -48,7 +51,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # 使用 gh 命令行工具创建 Release 并上传 jar 包
-          # 如果 Release 已存在，则尝试上传资源
-          # --generate-notes 会自动生成更新日志
-          gh release create v1.0.4 target/*.jar --title "Release v1.0.4" --generate-notes || gh release upload v1.0.4 target/*.jar --clobber
+          # 从环境变量中读取版本号
+          # 注意：这里我们假设版本号在工作流文件中被硬编码
+          # 你需要手动更新这里的版本号来触发发布
+          gh release create v1.0.5 target/*.jar --title "Release v1.0.5" --generate-notes || gh release upload v1.0.5 target/*.jar --clobber
