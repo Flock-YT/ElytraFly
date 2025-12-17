@@ -51,4 +51,4 @@ jobs:
           # 使用 gh 命令行工具创建 Release 并上传 jar 包
           # 如果 Release 已存在，则尝试上传资源
           # --generate-notes 会自动生成更新日志
-          gh release create v1.0.3 target/*.jar --title "Release v1.0.3" --generate-notes || gh release upload v1.0.3 target/*.jar --clobber
+          gh release create v1.0.4 target/*.jar --title "Release v1.0.4" --generate-notes || gh release upload v1.0.4 target/*.jar --clobber
