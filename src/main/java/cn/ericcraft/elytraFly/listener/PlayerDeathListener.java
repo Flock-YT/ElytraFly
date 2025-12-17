@@ -39,8 +39,12 @@ public class PlayerDeathListener implements Listener {
 
         // 检查玩家是否在我们的飞行列表中
         if (flightManager.isFlying(playerUUID)) {
-            // 玩家重生后，服务端的 allowFlight 会被重置为 false
-            // 我们需要将玩家从飞行列表中移除，以同步状态
+            // BUG修复：无论事件是真死亡还是因跨世界等原因触发的假“重生”，
+            // 都强制关闭玩家的飞行模式，确保服务器与插件状态同步。
+            player.setAllowFlight(false);
+            player.setFlying(false);
+
+            // 将玩家从飞行列表中移除
             flightManager.removePlayer(playerUUID);
 
             // 延迟发送消息，确保玩家能看到
