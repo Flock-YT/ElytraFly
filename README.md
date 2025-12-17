@@ -1,6 +1,5 @@
 # ElytraFly
 
-[![Build Status](https://github.com/your-username/your-repo-name/actions/workflows/build-and-release.yml/badge.svg)](https://github.com/your-username/your-repo-name/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **English** | [中文](README_CN.md)
