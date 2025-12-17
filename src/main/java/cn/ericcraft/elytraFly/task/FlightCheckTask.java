@@ -64,7 +64,7 @@ public class FlightCheckTask extends BukkitRunnable {
                 if (meta instanceof Damageable) {
                     Damageable damageable = (Damageable) meta;
 
-                    // 获取耐久附魔等级 (Enchantment.DURABILITY 对应 Unbreaking)
+                    // 获取耐久附魔等级 (Enchantment.UNBREAKING 对应 "耐久" 附魔)
                     int unbreakingLevel = meta.getEnchantLevel(Enchantment.UNBREAKING);
 
                     // 计算扣除耐久的几率: 1 / (等级 + 1)
@@ -81,7 +81,8 @@ public class FlightCheckTask extends BukkitRunnable {
 
                         // 检查鞘翅是否因此损坏
                         if (damageable.getDamage() >= maxDurability) {
-                            inventory.setChestplate(null); // 移除损坏的鞘翅
+                            // BUG修复：不再将鞘翅从物品栏移除(setChestplate(null))
+                            // 而是让它留在原位，仅关闭飞行模式
                             player.setAllowFlight(false);
                             player.setFlying(false);
                             iterator.remove();
