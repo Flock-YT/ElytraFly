@@ -1,10 +1,10 @@
 name: Build and Release Bukkit Plugin
 
-# 触发器：当代码被推送到 master 分支时运行
 on:
   push:
     branches:
       - master
+      - main
 
 jobs:
   build:
@@ -21,43 +21,35 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        # 确保 pom.xml 中的版本是 1.0.2
         run: mvn -B clean package
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: plugin-jar
-          path: target/ElytraFly-1.0.2.jar
+          # 使用通配符，无论版本号是 1.0.2 还是 1.0.2-SNAPSHOT 都能匹配到
+          path: target/*.jar
 
   release:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # 赋予 GITHUB_TOKEN 写权限以创建 Release
     steps:
-      - name: Download artifact from build job
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: plugin-jar
+          path: target # 将下载的文件放到 target 目录
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Create Release using GitHub CLI
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          # 硬编码版本号和发布名称
-          tag_name: v1.0.2
-          release_name: Release v1.0.2
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          # 硬编码资源路径和名称
-          asset_path: ElytraFly-1.0.2.jar
-          asset_name: ElytraFly-1.0.2.jar
-          asset_content_type: application/java-archive
+        run: |
+          # 使用 gh 命令行工具创建 Release 并上传 jar 包
+          # 如果 Release 已存在，则尝试上传资源
+          # --generate-notes 会自动生成更新日志
+          gh release create v1.0.2 target/*.jar --title "Release v1.0.2" --generate-notes || gh release upload v1.0.2 target/*.jar --clobber
