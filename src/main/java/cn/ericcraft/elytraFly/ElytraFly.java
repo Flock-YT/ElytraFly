@@ -21,17 +21,23 @@ public final class ElytraFly extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // 加载默认配置文件
+        saveDefaultConfig();
+
         // 初始化飞行管理器
         flightManager = new FlightManager();
 
-        // 注册 /fly 指令，并将飞行管理器注入到指令执行器中
-        this.getCommand("fly").setExecutor(new FlyCommand(flightManager));
+        // 注册 /fly 指令，并将插件实例注入
+        this.getCommand("fly").setExecutor(new FlyCommand(flightManager, this));
 
-        // 注册玩家死亡监听器, 并传入插件实例用于调度器
+        // 注册玩家死亡监听器, 并传入插件实例
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(flightManager, this), this);
 
-        // 启动飞行检查任务，并将飞行管理器注入
-        new FlightCheckTask(flightManager).runTaskTimer(this, 0L, 20L); // 每秒检查一次
+        // 获取检查间隔
+        long interval = getConfig().getLong("settings.check-interval", 20L);
+
+        // 启动飞行检查任务，并将插件实例注入
+        new FlightCheckTask(flightManager, this).runTaskTimer(this, 0L, interval);
 
         getLogger().info("ElytraFly 插件已成功加载！");
     }

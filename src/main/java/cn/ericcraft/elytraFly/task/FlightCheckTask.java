@@ -25,9 +25,19 @@ import java.util.UUID;
 public class FlightCheckTask extends BukkitRunnable {
 
     private final FlightManager flightManager;
+    private final cn.ericcraft.elytraFly.ElytraFly plugin;
 
-    public FlightCheckTask(FlightManager flightManager) {
+    public FlightCheckTask(FlightManager flightManager, cn.ericcraft.elytraFly.ElytraFly plugin) {
         this.flightManager = flightManager;
+        this.plugin = plugin;
+    }
+
+    private String getMessage(String key) {
+        String prefix = plugin.getConfig().getString("messages.prefix", "");
+        String msg = plugin.getConfig().getString("messages." + key);
+        if (msg == null)
+            return "";
+        return ChatColor.translateAlternateColorCodes('&', prefix + msg);
     }
 
     @Override
@@ -54,21 +64,35 @@ public class FlightCheckTask extends BukkitRunnable {
                 player.setAllowFlight(false);
                 player.setFlying(false);
                 iterator.remove();
-                player.sendMessage(ChatColor.AQUA + "[飞行系统] " + ChatColor.RED + "你已不再穿戴鞘翅，飞行模式已关闭。");
+                player.sendMessage(getMessage("no-elytra-equipped"));
                 continue;
             }
 
             // 如果玩家正在飞行(isFlying)，则消耗鞘翅耐久
             if (player.isFlying()) {
+                // Check if durability damage is enabled
+                if (!plugin.getConfig().getBoolean("settings.durability.enabled", true)) {
+                    continue;
+                }
+
+                // Check bypass permission
+                if (player.hasPermission("elytrafly.bypass.durability")) {
+                    continue;
+                }
+
                 ItemMeta meta = chestplate.getItemMeta();
                 if (meta instanceof Damageable) {
                     Damageable damageable = (Damageable) meta;
 
-                    // 获取耐久附魔等级 (Enchantment.UNBREAKING 对应 "耐久" 附魔)
-                    int unbreakingLevel = meta.getEnchantLevel(Enchantment.UNBREAKING);
-
-                    // 计算扣除耐久的几率: 1 / (等级 + 1)
-                    double chance = 1.0 / (unbreakingLevel + 1);
+                    double chance;
+                    if (plugin.getConfig().getBoolean("settings.durability.use-vanilla-formula", true)) {
+                        // 获取耐久附魔等级 (Enchantment.UNBREAKING 对应 "耐久" 附魔)
+                        int unbreakingLevel = meta.getEnchantLevel(Enchantment.UNBREAKING);
+                        // 计算扣除耐久的几率: 1 / (等级 + 1)
+                        chance = 1.0 / (unbreakingLevel + 1);
+                    } else {
+                        chance = plugin.getConfig().getDouble("settings.durability.custom-chance", 0.5);
+                    }
 
                     // 根据几率决定是否扣除耐久
                     if (Math.random() < chance) {
@@ -78,6 +102,7 @@ public class FlightCheckTask extends BukkitRunnable {
                         // 增加1点耐久损伤
                         damageable.setDamage(currentDamage + 1);
                         chestplate.setItemMeta(meta);
+                        inventory.setChestplate(chestplate);
 
                         // 检查鞘翅是否因此损坏
                         if (damageable.getDamage() >= maxDurability) {
@@ -86,7 +111,7 @@ public class FlightCheckTask extends BukkitRunnable {
                             player.setAllowFlight(false);
                             player.setFlying(false);
                             iterator.remove();
-                            player.sendMessage(ChatColor.AQUA + "[飞行系统] " + ChatColor.RED + "你的鞘翅已经损坏！飞行模式已关闭。");
+                            player.sendMessage(getMessage("elytra-broke-midair"));
                             // 播放物品损坏的声音，给玩家明确的反馈
                             player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
                         }

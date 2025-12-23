@@ -54,4 +54,4 @@ jobs:
           # 从环境变量中读取版本号
           # 注意：这里我们假设版本号在工作流文件中被硬编码
           # 你需要手动更新这里的版本号来触发发布
-          gh release create v1.0.5 target/*.jar --title "Release v1.0.5" --generate-notes || gh release upload v1.0.5 target/*.jar --clobber
+          gh release create v1.0.6 target/*.jar --title "Release v1.0.6" --generate-notes || gh release upload v1.0.6 target/*.jar --clobber

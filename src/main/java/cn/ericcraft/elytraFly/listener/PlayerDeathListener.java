@@ -52,7 +52,11 @@ public class PlayerDeathListener implements Listener {
                 @Override
                 public void run() {
                     if (player.isOnline()) {
-                        player.sendMessage(ChatColor.AQUA + "[飞行系统] " + ChatColor.YELLOW + "你已重生，鞘翅飞行模式已自动关闭。");
+                        String msg = plugin.getConfig().getString("messages.respawn-disabled");
+                        if (msg != null) {
+                            String prefix = plugin.getConfig().getString("messages.prefix", "");
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + msg));
+                        }
                     }
                 }
             }.runTaskLater(plugin, 20L); // 延迟1秒 (20 ticks) 后发送

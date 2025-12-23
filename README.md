@@ -26,6 +26,17 @@ ElytraFly is a lightweight and balanced Spigot plugin for Minecraft 1.21+ that e
 1.  Download the latest `.jar` from the [Releases page](https://github.com/your-username/your-repo-name/releases).
 2.  Place it into your server's `plugins` folder.
 3.  Restart the server.
+4.  (Optional) Edit `plugins/ElytraFly/config.yml` to customize settings.
+
+## ⚙️ Configuration
+
+The plugin generates a `config.yml` file where you can customize:
+
+*   **Messages**: Translate flight, error, and status messages.
+*   **Settings**:
+    *   `check-interval`: Frequency of flight checks (default: 20 ticks).
+    *   **Durability**: Toggle durability consumption, use vanilla mechanics, or set a custom breakage chance.
+    *   **World Management**: Whitelist or Blacklist specific worlds for Elytra flight.
 
 ## 🎮 Commands & Permissions
 

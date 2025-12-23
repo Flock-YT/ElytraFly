@@ -19,16 +19,26 @@ import org.bukkit.inventory.meta.Damageable;
 public class FlyCommand implements CommandExecutor {
 
     private final FlightManager flightManager;
+    private final cn.ericcraft.elytraFly.ElytraFly plugin;
 
-    public FlyCommand(FlightManager flightManager) {
+    public FlyCommand(FlightManager flightManager, cn.ericcraft.elytraFly.ElytraFly plugin) {
         this.flightManager = flightManager;
+        this.plugin = plugin;
+    }
+
+    private String getMessage(String key) {
+        String prefix = plugin.getConfig().getString("messages.prefix", "");
+        String msg = plugin.getConfig().getString("messages." + key);
+        if (msg == null)
+            return "";
+        return ChatColor.translateAlternateColorCodes('&', prefix + msg);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         // 检查指令发送者是否为玩家
         if (!(sender instanceof Player)) {
-            sender.sendMessage("该指令只能由玩家执行。");
+            sender.sendMessage(getMessage("only-player"));
             return true;
         }
 
@@ -36,7 +46,7 @@ public class FlyCommand implements CommandExecutor {
 
         // 检查玩家是否拥有 elytrafly.use 权限
         if (!player.hasPermission("elytrafly.use")) {
-            player.sendMessage(ChatColor.AQUA + "[飞行系统] " + ChatColor.RED + "你没有权限使用此指令。");
+            player.sendMessage(getMessage("no-permission"));
             return true;
         }
 
@@ -48,9 +58,28 @@ public class FlyCommand implements CommandExecutor {
             // 检查鞘翅是否已经损坏
             if (chestplate.getItemMeta() instanceof Damageable) {
                 if (((Damageable) chestplate.getItemMeta()).getDamage() >= chestplate.getType().getMaxDurability()) {
-                    player.sendMessage(ChatColor.AQUA + "[飞行系统] " + ChatColor.RED + "你的鞘翅已经损坏，无法飞行！");
+                    player.sendMessage(getMessage("elytra-broken"));
                     return true;
                 }
+            }
+
+            // World Check
+            String worldName = player.getWorld().getName();
+            String listType = plugin.getConfig().getString("settings.world-list.type", "BLACKLIST");
+            java.util.List<String> worlds = plugin.getConfig().getStringList("settings.world-list.worlds");
+
+            boolean allowed = true;
+            if ("WHITELIST".equalsIgnoreCase(listType)) {
+                if (!worlds.contains(worldName))
+                    allowed = false;
+            } else { // BLACKLIST
+                if (worlds.contains(worldName))
+                    allowed = false;
+            }
+
+            if (!allowed && !player.hasPermission("elytrafly.bypass.world")) {
+                player.sendMessage(getMessage("world-disabled"));
+                return true;
             }
 
             // 切换飞行模式
@@ -59,15 +88,15 @@ public class FlyCommand implements CommandExecutor {
                 player.setAllowFlight(false);
                 player.setFlying(false);
                 flightManager.removePlayer(player.getUniqueId());
-                player.sendMessage(ChatColor.AQUA + "[飞行系统] " + ChatColor.GREEN + "鞘翅飞行模式已关闭。");
+                player.sendMessage(getMessage("flight-disabled"));
             } else {
                 // 如果未在飞行，则开启飞行
                 player.setAllowFlight(true);
                 flightManager.addPlayer(player.getUniqueId());
-                player.sendMessage(ChatColor.AQUA + "[飞行系统] " + ChatColor.GREEN + "鞘翅飞行模式已开启！");
+                player.sendMessage(getMessage("flight-enabled"));
             }
         } else {
-            player.sendMessage(ChatColor.AQUA + "[飞行系统] " + ChatColor.RED + "你必须穿戴鞘翅才能使用此指令。");
+            player.sendMessage(getMessage("no-elytra"));
         }
         return true;
     }

@@ -1,5 +1,5 @@
 name: ElytraFly
-version: '1.0.5-SNAPSHOT'
+version: '1.0.6'
 main: cn.ericcraft.elytraFly.ElytraFly
 api-version: '1.21'
 author: Eric
@@ -12,3 +12,6 @@ permissions:
   elytrafly.use:
     description: 允许使用 /fly 指令开启鞘翅飞行模式
     default: op
+  elytrafly.bypass.durability:
+    description: 允许玩家在滑翔飞行时不消耗耐久
+    default: false

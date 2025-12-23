@@ -1,0 +1,47 @@
+# ElytraFly Configuration / 配置文件
+
+settings:
+  # Check interval in ticks (20 ticks = 1 second)
+  # 检查间隔，单位为 tick (20 ticks = 1秒)
+  # How often to check for flight status and apply durability damage
+  # 多久检查一次飞行状态并扣除耐久
+  check-interval: 20
+
+  durability:
+    # Whether to consume durability while flying
+    # 是否在飞行时消耗耐久
+    enabled: true
+    # If true, uses the vanilla unbreaking formula: 1 / (level + 1)
+    # 如果为 true，则使用原版耐久附魔公式：1 / (等级 + 1)
+    # If false, uses custom-chance
+    # 如果为 false，则使用下方自定义几率 custom-chance
+    use-vanilla-formula: true
+    # Chance to consume 1 durability per interval (0.0 - 1.0)
+    # 每个检查周期扣除1点耐久的几率 (0.0 - 1.0)
+    # Only used if use-vanilla-formula is false
+    # 仅在 use-vanilla-formula 为 false 时生效
+    custom-chance: 0.5
+
+  # World restrictions / 世界限制
+  world-list:
+    # Type: BLACKLIST (allow all except listed) or WHITELIST (allow only listed)
+    # 类型: BLACKLIST (黑名单：允许所有除列表外) 或 WHITELIST (白名单：仅允许列表内)
+    type: BLACKLIST
+    # List of world names / 世界名称列表
+    worlds:
+      - "example_world_name"
+
+messages:
+  # You can translate these messages to your liking. / 你可以根据喜好修改这些消息。
+  # Support Color Codes (&) / 支持颜色代码 (&)
+  prefix: "&b[飞行系统] "
+  no-permission: "&c你没有权限使用此指令。"
+  only-player: "该指令只能由玩家执行。"
+  elytra-broken: "&c你的鞘翅已经损坏，无法飞行！"
+  flight-enabled: "&a鞘翅飞行模式已开启！"
+  flight-disabled: "&a鞘翅飞行模式已关闭。"
+  no-elytra: "&c你必须穿戴鞘翅才能使用此指令。"
+  no-elytra-equipped: "&c你已不再穿戴鞘翅，飞行模式已关闭。"
+  elytra-broke-midair: "&c你的鞘翅已经损坏！飞行模式已关闭。"
+  respawn-disabled: "&e你已重生，鞘翅飞行模式已自动关闭。"
+  world-disabled: "&c此世界禁止使用鞘翅飞行。"
