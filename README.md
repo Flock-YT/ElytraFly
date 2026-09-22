@@ -2,8 +2,6 @@
 
 # ElytraPlus
 
-[![ElytraPlus Plugin Installation Chart](https://bstats.org/signatures/bukkit/ElytraPlus.svg)](https://bstats.org/plugin/bukkit/ElytraPlus/34208)
-
 Wear an elytra and use `/fly` to fly like in creative mode, without fireworks. Durability is consumed only while you are actually flying.
 
 ## Installation
@@ -91,3 +89,5 @@ Find `bstats`, change the `enabled: true` beneath it to `enabled: false`, then s
 For other problems, [report an issue](https://github.com/Flock-YT/ElytraPlus/issues) with your server version, steps to reproduce the problem and any error messages.
 
 [MIT license](LICENSE).
+
+[![ElytraPlus Plugin Installation Chart](https://bstats.org/signatures/bukkit/ElytraPlus.svg)](https://bstats.org/plugin/bukkit/ElytraPlus/34208)

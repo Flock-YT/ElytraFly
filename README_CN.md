@@ -2,8 +2,6 @@
 
 # ElytraPlus 鞘翅飞行插件
 
-[![ElytraPlus 插件安装量统计图](https://bstats.org/signatures/bukkit/ElytraPlus.svg)](https://bstats.org/plugin/bukkit/ElytraPlus/34208)
-
 穿上鞘翅，输入 `/fly`，就能像创造模式一样自由飞行，无需烟花。只有实际飞行时才会消耗耐久。
 
 ## 安装
@@ -91,3 +89,5 @@
 遇到其他问题，可以到 [问题反馈](https://github.com/Flock-YT/ElytraPlus/issues) 附上服务端版本、问题出现的步骤和报错信息。
 
 [MIT 许可证](LICENSE)。
+
+[![ElytraPlus 插件安装量统计图](https://bstats.org/signatures/bukkit/ElytraPlus.svg)](https://bstats.org/plugin/bukkit/ElytraPlus/34208)
