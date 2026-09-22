@@ -9,6 +9,7 @@ import java.util.Set;
 
 /** Validated startup snapshot; no configuration reads in the flight loop. */
 public final class FlightSettings {
+    public final boolean metricsEnabled;
     public final long interval;
     public final boolean durabilityEnabled;
     public final boolean vanillaFormula;
@@ -17,6 +18,7 @@ public final class FlightSettings {
     private final Set<String> worlds;
 
     public FlightSettings(ConfigurationSection config) {
+        metricsEnabled = bool(config, "bstats.enabled", true);
         Object intervalValue = value(config, "settings.check-interval", 20);
         if (!(intervalValue instanceof Number) ||
                 !(intervalValue instanceof Integer || intervalValue instanceof Long) ||

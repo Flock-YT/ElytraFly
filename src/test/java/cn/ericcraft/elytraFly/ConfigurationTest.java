@@ -5,6 +5,12 @@ import cn.ericcraft.elytraFly.config.Messages;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.bukkit.configuration.InvalidConfigurationException;
+import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,6 +21,10 @@ class ConfigurationTest {
         YamlConfiguration config = new YamlConfiguration();
         FlightSettings settings = new FlightSettings(config);
         assertEquals(20, settings.interval); assertTrue(settings.durabilityEnabled);
+        assertTrue(settings.metricsEnabled);
+        config.set("bstats.enabled", false);
+        assertFalse(new FlightSettings(config).metricsEnabled);
+        assertTrue(settings.metricsEnabled);
         assertTrue(settings.allowsWorld("world")); assertFalse(settings.allowsWorld("example_world_name"));
         config.set("settings.world-list.worlds", Collections.singletonList("world"));
         assertTrue(settings.allowsWorld("world"));
@@ -27,6 +37,8 @@ class ConfigurationTest {
         assertTrue(settings.allowsWorld("World")); assertFalse(settings.allowsWorld("world"));
     }
     @Test void rejectsMalformedValuesWithTheirPaths() {
+        invalid("bstats.enabled", "true"); invalid("bstats.enabled", 1);
+        invalid("bstats", false);
         invalid("settings.check-interval", 0); invalid("settings.check-interval", -1);
         invalid("settings.check-interval", 1.5); invalid("settings.check-interval", "20");
         invalid("settings.durability.custom-chance", Double.NaN);
@@ -50,5 +62,68 @@ class ConfigurationTest {
         reset(sender); config.set("messages.test", ""); new Messages(config, defaults).send(sender, "test");
         verifyNoInteractions(sender);
         config.set("messages.test", 1); assertThrows(IllegalArgumentException.class, () -> new Messages(config, defaults));
+    }
+
+    @TempDir Path data;
+
+    private Messages load(YamlConfiguration config) throws Exception {
+        return Messages.load(data.toFile(), config, path -> getClass().getResourceAsStream("/" + path));
+    }
+
+    @Test void selectsLanguageAndIgnoresOldConfigMessages() throws Exception {
+        YamlConfiguration config = new YamlConfiguration();
+        config.set("messages.flight-enabled", "Old override");
+        CommandSender sender = mock(CommandSender.class);
+        load(config).send(sender, "flight-enabled");
+        verify(sender).sendMessage("§b[飞行系统] §a鞘翅飞行模式已开启！");
+        assertTrue(Files.exists(data.resolve("lang/zh_CN.yml")));
+        assertTrue(Files.exists(data.resolve("lang/en_US.yml")));
+        reset(sender);
+        config.set("language", "en_US");
+        load(config).send(sender, "flight-enabled");
+        verify(sender).sendMessage("§b[ElytraFly] §aElytra flight enabled!");
+    }
+
+    @Test void preservesCustomFilesAndUsesSelectedLanguageFallback() throws Exception {
+        YamlConfiguration config = new YamlConfiguration(); config.set("language", "en_US");
+        load(config);
+        Path file = data.resolve("lang/en_US.yml");
+        byte[] custom = "messages:\n  prefix: '&6Custom '\n  flight-disabled: ''\n".getBytes(StandardCharsets.UTF_8);
+        Files.write(file, custom);
+        Messages messages = load(config);
+        assertArrayEquals(custom, Files.readAllBytes(file));
+        // Rendering is a startup snapshot, unaffected by later file edits.
+        Files.write(file, "messages: invalid".getBytes(StandardCharsets.UTF_8));
+        CommandSender sender = mock(CommandSender.class);
+        messages.send(sender, "flight-enabled");
+        verify(sender).sendMessage("§6Custom §aElytra flight enabled!");
+        reset(sender); messages.send(sender, "flight-disabled"); verifyNoInteractions(sender);
+    }
+
+    @Test void rejectsInvalidLanguageAndLanguageFile() throws Exception {
+        YamlConfiguration config = new YamlConfiguration();
+        for (Object language : Arrays.asList("fr_FR", "../en_US", "", 7, false)) {
+            config.set("language", language);
+            assertTrue(assertThrows(IllegalArgumentException.class, () -> load(config)).getMessage().contains("language"));
+        }
+        config.set("language", "en_US"); load(config);
+        Path file = data.resolve("lang/en_US.yml");
+        for (String invalid : Arrays.asList("messages: invalid", "messages:\n  prefix: 1", "messages:\n  usage: false")) {
+            Files.write(file, invalid.getBytes(StandardCharsets.UTF_8));
+            assertTrue(assertThrows(IllegalArgumentException.class, () -> load(config)).getMessage().contains("lang/en_US.yml"));
+        }
+        Files.write(file, "messages: [".getBytes(StandardCharsets.UTF_8));
+        assertTrue(assertThrows(InvalidConfigurationException.class, () -> load(config)).getMessage().contains("lang/en_US.yml"));
+    }
+
+    @Test void bundledLanguagesHaveMatchingKeys() throws Exception {
+        YamlConfiguration chinese = new YamlConfiguration(), english = new YamlConfiguration();
+        try (InputStreamReader zh = new InputStreamReader(getClass().getResourceAsStream("/lang/zh_CN.yml"), StandardCharsets.UTF_8);
+             InputStreamReader en = new InputStreamReader(getClass().getResourceAsStream("/lang/en_US.yml"), StandardCharsets.UTF_8)) {
+            chinese.load(zh); english.load(en);
+        }
+        assertEquals(chinese.getKeys(true), english.getKeys(true));
+        new Messages(new YamlConfiguration(), chinese);
+        new Messages(new YamlConfiguration(), english);
     }
 }

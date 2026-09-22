@@ -44,7 +44,7 @@ class FlightManagerTest {
         items = mock(ElytraAccess.class);
         config = new YamlConfiguration();
         messages = new Messages(config, YamlConfiguration.loadConfiguration(new InputStreamReader(
-                getClass().getResourceAsStream("/config.yml"), StandardCharsets.UTF_8)));
+                getClass().getResourceAsStream("/lang/zh_CN.yml"), StandardCharsets.UTF_8)));
         when(player.getUniqueId()).thenReturn(UUID.randomUUID());
         when(player.isOnline()).thenReturn(true);
         when(player.getGameMode()).thenReturn(GameMode.SURVIVAL);

@@ -13,7 +13,7 @@ Targets Minecraft **1.9–26.3** on the traditional Bukkit main-thread model: Cr
 
 One JAR targets Java 8 bytecode. Run your server on the Java version that the server requires; modern Minecraft may require Java 17, 21 or 25. The bytecode target does not lower Minecraft's Java requirements.
 
-See the [compatibility matrix](docs/COMPATIBILITY.md) for compilation, unchanged-JAR API checks and real-server validation. Passing API checks does not certify every fork or patch release.
+Passing API checks does not certify every fork or patch release. Real-server loading and gameplay have not been tested.
 
 ## Installation and migration
 
@@ -22,7 +22,7 @@ See the [compatibility matrix](docs/COMPATIBILITY.md) for compilation, unchanged
 3. Start the server. Existing configuration is preserved; first startup creates the default file.
 4. Restart after configuration changes. Invalid configuration prevents plugin enablement and logs the offending key.
 
-The rewrite preserves the plugin name, `/fly`, permissions and configuration keys. Missing settings and new messages use bundled defaults without rewriting your file. See [migration notes](docs/MIGRATION.md).
+The plugin name, `/fly`, permissions and flight settings remain unchanged. Messages now use separate language files: the old config.yml `messages` section is neither read nor migrated automatically. Copy custom messages into the appropriate language file. Missing settings use defaults without rewriting your configuration.
 
 ## Commands and behavior
 
@@ -53,9 +53,15 @@ Bukkit exposes no flight ownership token. ElytraFly avoids taking over pre-exist
 | `settings.durability.custom-chance` | `0.5` | Probability of one damage per interval when the vanilla formula is disabled; finite number in `[0,1]`. |
 | `settings.world-list.type` | `BLACKLIST` | `BLACKLIST` or `WHITELIST`, case-insensitive mode name. |
 | `settings.world-list.worlds` | Example world | Exact, case-sensitive world names. |
-| `messages.*` | Bundled configuration | Legacy `&` colors; empty strings suppress messages, absent keys use defaults. |
+| `language` | `zh_CN` | `zh_CN` for Chinese or `en_US` for English; restart to apply. Other values prevent enablement. |
 
 Unbreakable metadata and modern custom maximum durability are respected. Damage reaching maximum minus one disables flight; the compatibility layer corrects the old Bukkit elytra durability report. Damage is written directly, without simulating vanilla gliding or firing `PlayerItemDamageEvent`; third-party item integrations need separate validation.
+
+First startup creates `plugins/ElytraFly/lang/zh_CN.yml` and `en_US.yml` without overwriting existing files. Customize text and prefix under `messages` in each file. `&` colors are supported; empty strings suppress the entire message and missing keys fall back to bundled text in the selected language. Restart after edits. Player and console command replies use the selected language; technical logs remain English.
+
+## bStats metrics
+
+bStats 3.2.1 is bundled with plugin ID **34208**; no additional plugin installation is needed. Only standard metrics are used, with no custom charts. Set `bstats.enabled: false` in ElytraFly’s config.yml and restart to disable this plugin’s metrics without initializing bStats. It defaults to true when absent; existing configurations can add the setting manually. The global `enabled` switch in plugins/bStats/config.yml is also respected: either switch can disable collection for this plugin. Metrics initialization failure does not prevent flight functionality.
 
 ## Build and verification
 
@@ -71,7 +77,7 @@ mvn clean verify
 
 Output: `target/ElytraFly-<version>.jar`. Regression tests cover configuration, sessions and durability rules. API checks use real API dependencies and test doubles in separate processes to check class loading, item adapters and basic flight behavior; they do not boot Minecraft.
 
-CI builds once and distributes the same JAR to its API/Java matrix. Artifact checks cover version, Java 8 bytecode, resources, signature metadata and accidentally bundled API/test dependencies. The unavailable historical Spigot 1.9 chat snapshot is replaced with a pinned `provided` build dependency; it is not bundled or used through proprietary chat APIs.
+CI builds once and distributes the same JAR to its API/Java matrix. Artifact checks cover version, Java 8 bytecode, language resources, bStats relocation, signature metadata and accidentally bundled API/test dependencies. The unavailable historical Spigot 1.9 chat snapshot is replaced with a pinned `provided` build dependency; it is not bundled or used through proprietary chat APIs.
 
 ## Releases and structure
 

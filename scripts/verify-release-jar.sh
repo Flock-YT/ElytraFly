@@ -49,6 +49,13 @@ if ! printf '%s\n' "$jar_entries" | grep -Eq '^cn/ericcraft/elytraFly/ElytraFly\
     exit 1
 fi
 
+for required_entry in lang/zh_CN.yml lang/en_US.yml cn/ericcraft/elytraFly/lib/bstats/bukkit/Metrics.class cn/ericcraft/elytraFly/lib/bstats/MetricsBase.class; do
+    if ! printf '%s\n' "$jar_entries" | grep -Fx "$required_entry" > /dev/null; then
+        echo "Required bundled resource or relocated bStats class missing: $required_entry" >&2
+        exit 1
+    fi
+done
+
 if ! jarsigner_output="$(jarsigner -verify "$absolute_jar_path" 2>&1)"; then
     printf '%s\n' "$jarsigner_output" >&2
     echo "jarsigner verification failed for $jar_path" >&2
@@ -81,8 +88,8 @@ if ! grep -Eq "^api-version: ['\"]?1\\.13['\"]?$" "$temporary_directory/plugin.y
     exit 1
 fi
 
-if printf '%s\n' "$jar_entries" | grep -Eq '^(org/bukkit/|org/junit/|org/mockito/|net/bytebuddy/|net/md_5/|cn/ericcraft/elytraFly/.*(Test|ApiSmoke)[^/]*\.class$)'; then
-    echo "Bukkit API, chat library, test classes and test dependencies must not be bundled in $jar_path." >&2
+if printf '%s\n' "$jar_entries" | grep -Eq '^(org/bstats/|org/bukkit/|org/junit/|org/mockito/|net/bytebuddy/|net/md_5/|cn/ericcraft/elytraFly/.*(Test|ApiSmoke)[^/]*\.class$)'; then
+    echo "Unrelocated bStats, Bukkit API, chat library, test classes and test dependencies must not be bundled in $jar_path." >&2
     exit 1
 fi
 

@@ -1,0 +1,18 @@
+# Supports & color codes. An empty string suppresses the entire message.
+messages:
+  prefix: "&b[ElytraFly] "
+  no-permission: "&cYou do not have permission to use this command."
+  only-player: "Only players can use this command."
+  elytra-broken: "&cYour elytra is broken. You cannot fly!"
+  flight-enabled: "&aElytra flight enabled!"
+  flight-disabled: "&aElytra flight disabled."
+  no-elytra: "&cYou must wear an elytra to use this command."
+  no-elytra-equipped: "&cYou are no longer wearing an elytra. Flight disabled."
+  elytra-broke-midair: "&cYour elytra broke! Flight disabled."
+  respawn-disabled: "&eYou respawned. Elytra flight has been disabled."
+  world-disabled: "&cElytra flight is disabled in this world."
+  already-can-fly: "&eYou already have flight ability. Elytra flight is not needed."
+  permission-revoked: "&cYou no longer have flight permission. Elytra flight disabled."
+  flight-revoked: "&eAnother system revoked your flight ability. Elytra flight disabled."
+  flight-error: "&cA flight check failed. Elytra flight disabled; contact an administrator."
+  usage: "&eUsage: /fly"

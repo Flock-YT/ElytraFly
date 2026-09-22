@@ -2,6 +2,16 @@
 # Restart after edits; invalid values prevent enablement.
 # 修改后重启；无效配置会阻止插件启用。
 
+# Language / 语言: zh_CN or en_US; restart to apply / 重启生效
+language: zh_CN
+
+# Allow standard bStats metrics for this plugin; restart to apply.
+# 是否允许本插件收集 bStats 标准统计数据；修改后重启生效。
+# The global plugins/bStats/config.yml switch must also be enabled.
+# 同时遵守 plugins/bStats/config.yml 的全局开关。
+bstats:
+  enabled: true
+
 settings:
   # Check interval in ticks (20 ticks = 1 second)
   # 检查间隔，必须为正整数，单位为 tick (20 ticks = 1秒)
@@ -33,24 +43,3 @@ settings:
     # List of world names / 世界名称列表
     worlds:
       - "example_world_name"
-
-messages:
-  # You can translate these messages to your liking. / 你可以根据喜好修改这些消息。
-  # Support Color Codes (&); an empty string suppresses the entire message.
-  # 支持颜色代码 (&)；空字符串关闭整条提示（包括前缀）。
-  prefix: "&b[飞行系统] "
-  no-permission: "&c你没有权限使用此指令。"
-  only-player: "该指令只能由玩家执行。"
-  elytra-broken: "&c你的鞘翅已经损坏，无法飞行！"
-  flight-enabled: "&a鞘翅飞行模式已开启！"
-  flight-disabled: "&a鞘翅飞行模式已关闭。"
-  no-elytra: "&c你必须穿戴鞘翅才能使用此指令。"
-  no-elytra-equipped: "&c你已不再穿戴鞘翅，飞行模式已关闭。"
-  elytra-broke-midair: "&c你的鞘翅已经损坏！飞行模式已关闭。"
-  respawn-disabled: "&e你已重生，鞘翅飞行模式已自动关闭。"
-  world-disabled: "&c此世界禁止使用鞘翅飞行。"
-  already-can-fly: "&e你已经拥有飞行能力，无需开启鞘翅飞行。"
-  permission-revoked: "&c你已失去飞行权限，鞘翅飞行模式已关闭。"
-  flight-revoked: "&e飞行能力已被其他系统撤销，鞘翅飞行模式已关闭。"
-  flight-error: "&c飞行检查发生错误，鞘翅飞行模式已关闭，请联系管理员。"
-  usage: "&e用法：/fly"
