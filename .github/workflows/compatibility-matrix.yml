@@ -1,0 +1,89 @@
+name: ElytraFly CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      artifact-name:
+        description: Optional existing release artifact to validate instead of the local build
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Build once / Spigot 1.9 / Java 8 bytecode
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - run: mvn -B --no-transfer-progress clean verify
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        if: inputs.artifact-name != ''
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: target
+      - run: ./scripts/verify-release-jar.sh
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: compatibility-input
+          path: |
+            target/ElytraFly-*.jar
+            target/test-classes/
+          if-no-files-found: error
+
+  compatibility:
+    name: Same JAR / API ${{ matrix.api }} / Java ${{ matrix.java }}
+    needs: verify
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { api: '1.9', java: '8' }
+          - { api: '1.9.4', java: '8' }
+          - { api: '1.10.2', java: '8' }
+          - { api: '1.11.2', java: '8' }
+          - { api: '1.12.2', java: '8' }
+          - { api: '1.13.2', java: '8' }
+          - { api: '1.14.4', java: '8' }
+          - { api: '1.15.2', java: '8' }
+          - { api: '1.16.5', java: '8' }
+          - { api: '1.17.1', java: '16' }
+          - { api: '1.18.2', java: '17' }
+          - { api: '1.19.4', java: '17' }
+          - { api: '1.20.3', java: '17' }
+          - { api: '1.20.6', java: '21' }
+          - { api: '1.21', java: '21' }
+          - { api: '1.21.11', java: '21' }
+          - { api: '26.1.2', java: '25' }
+          - { api: '26.2', java: '25' }
+          - { api: '26.3', java: '25' }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: maven
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: compatibility-input
+          path: target
+      - run: ./scripts/verify-api-compatibility.sh '${{ matrix.api }}'
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: api-results-${{ matrix.api }}
+          path: |
+            target/compatibility/*.log
+            target/compatibility/artifact.sha256
