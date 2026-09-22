@@ -1,9 +1,10 @@
 name: ElytraFly
-version: '1.0.6'
+version: '${project.version}'
 main: cn.ericcraft.elytraFly.ElytraFly
 api-version: '1.21'
 author: Eric
 description: A plugin that allows players to fly with elytra.
+website: https://github.com/Flock-YT/ElytraFly
 commands:
   fly:
     description: Enables creative flight mode while wearing elytra.
@@ -15,3 +16,6 @@ permissions:
   elytrafly.bypass.durability:
     description: 允许玩家在滑翔飞行时不消耗耐久
     default: false
+  elytrafly.bypass.world:
+    description: 允许玩家忽略世界白名单或黑名单限制
+    default: op
