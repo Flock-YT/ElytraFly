@@ -2,91 +2,88 @@
 
 # ElytraFly
 
-[![CI](https://github.com/Flock-YT/ElytraFly/actions/workflows/compatibility-matrix.yml/badge.svg)](https://github.com/Flock-YT/ElytraFly/actions/workflows/compatibility-matrix.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
+Wear an elytra and use `/fly` to fly like in creative mode, without fireworks. Durability is consumed only while you are actually flying.
 
-Equip a usable elytra and run `/fly` to enable creative-style flight. Enabling flight does not force takeoff. Durability is consumed only while actually flying.
+## Installation
 
-## Compatibility
+1. Download `ElytraFly-<version>.jar` from the [downloads page](https://github.com/Flock-YT/ElytraFly/releases).
+2. Stop your server, put the file in its `plugins` folder, then start the server.
+3. Wear an elytra with durability remaining and try it in survival mode with an OP account.
 
-Targets Minecraft **1.9–26.3** on the traditional Bukkit main-thread model: CraftBukkit, Spigot, Paper, Purpur and compatible forks. **Folia is not supported.** Modded hybrid servers are not specifically certified.
+Designed for Minecraft **1.9–26.3** on Bukkit, Spigot, Paper and Purpur. Folia is not supported. Automated compatibility checks have been run, but each version has not been tested on a live server; try it on a test server first.
 
-One JAR targets Java 8 bytecode. Run your server on the Java version that the server requires; modern Minecraft may require Java 17, 21 or 25. The bytecode target does not lower Minecraft's Java requirements.
+When upgrading, back up `plugins/ElytraFly`, then stop the server and replace the old plugin file. Your existing settings are kept.
 
-Passing API checks does not certify every fork or patch release. Real-server loading and gameplay have not been tested.
+## How to fly
 
-## Installation and migration
+1. Equip an elytra in your chest slot; keeping it in your inventory is not enough.
+2. Enter `/fly` in game to enable flight.
+3. Double-tap jump to take off, just like creative mode. With default controls, hold Space to rise and Shift to descend.
+4. Land and enter `/fly` again to disable flight.
 
-1. Stop the server and back up the existing JAR and `plugins/ElytraFly/config.yml`.
-2. Install `ElytraFly-<version>.jar`. Do not install Maven's `original-` intermediate artifact.
-3. Start the server. Existing configuration is preserved; first startup creates the default file.
-4. Restart after configuration changes. Invalid configuration prevents plugin enablement and logs the offending key.
+**Flight stops if your elytra breaks, you remove it, or you enter a world where flight is blocked. You may take fall damage.** Watch your durability and land before disabling flight. Broken elytra are kept and can be repaired. After dying or logging back in, use `/fly` again.
 
-The plugin name, `/fly`, permissions and flight settings remain unchanged. Messages now use separate language files: the old config.yml `messages` section is neither read nor migrated automatically. Copy custom messages into the appropriate language file. Missing settings use defaults without rewriting your configuration.
+## Let regular players fly
 
-## Commands and behavior
+Only OPs can use the plugin by default. In your permissions plugin, grant `elytrafly.use` to a player or group. To let all regular players use it, grant it to the default player group.
 
-| Command / permission | Default | Purpose |
+| Permission | What it allows | Who has it by default |
 | --- | --- | --- |
-| `/fly` | Player-only command | Toggle your elytra flight session; no arguments. |
-| `elytrafly.use` | OP | Enable and continue using flight. |
-| `elytrafly.bypass.durability` | Nobody | Skip durability consumption, but still require a usable elytra. |
-| `elytrafly.bypass.world` | OP | Bypass world restrictions. |
+| `elytrafly.use` | Use elytra flight | OPs |
+| `elytrafly.bypass.durability` | Fly without this plugin consuming durability; a usable elytra is still required | Nobody |
+| `elytrafly.bypass.world` | Fly even in blocked worlds | OPs |
 
-- Creative/spectator players and players who already have flight are not taken over.
-- An active session can always be switched off, even after losing permission or changing equipment/world.
-- World changes and takeoff attempts validate eligibility immediately. Periodic checks catch permission and equipment changes by the next interval.
-- Death, respawn, disconnect, kick and plugin disable clear sessions. Reconnecting does not resume flight.
-- Switching into creative/spectator releases the session to the server's game-mode handling.
-- Exhausted elytra remain equipped and repairable. Disabling damage, bypass permissions and unbreakable metadata do not make an already exhausted item usable.
-- Flight removal retains vanilla falling and damage; no landing protection is added.
+**Test world restrictions with a regular player who has no bypass permission.** OPs bypass world restrictions by default.
 
-Bukkit exposes no flight ownership token. ElytraFly avoids taking over pre-existing flight and does not restore flight revoked by another plugin. It cannot detect another plugin granting the same `allowFlight=true` value during an active session. Avoid concurrent flight management for the same player.
+## Settings
 
-## Configuration
+The plugin creates `plugins/ElytraFly/config.yml` on first startup. The defaults are ready to use; change only what you need.
 
-| Key | Default | Meaning |
-| --- | --- | --- |
-| `settings.check-interval` | `20` | Positive integer ticks between checks and damage attempts, normally 20 ticks per second. |
-| `settings.durability.enabled` | `true` | Attempt damage while actually flying. |
-| `settings.durability.use-vanilla-formula` | `true` | Damage probability `1 / (Unbreaking level + 1)`. |
-| `settings.durability.custom-chance` | `0.5` | Probability of one damage per interval when the vanilla formula is disabled; finite number in `[0,1]`. |
-| `settings.world-list.type` | `BLACKLIST` | `BLACKLIST` or `WHITELIST`, case-insensitive mode name. |
-| `settings.world-list.worlds` | Example world | Exact, case-sensitive world names. |
-| `language` | `zh_CN` | `zh_CN` for Chinese or `en_US` for English; restart to apply. Other values prevent enablement. |
+- `true` means on and `false` means off.
+- Keep the spaces at the start of each line. Do not use Tab for indentation.
+- Save and restart the server to apply changes. This plugin has no reload command.
 
-Unbreakable metadata and modern custom maximum durability are respected. Damage reaching maximum minus one disables flight; the compatibility layer corrects the old Bukkit elytra durability report. Damage is written directly, without simulating vanilla gliding or firing `PlayerItemDamageEvent`; third-party item integrations need separate validation.
+### Disable durability consumption
 
-First startup creates `plugins/ElytraFly/lang/zh_CN.yml` and `en_US.yml` without overwriting existing files. Customize text and prefix under `messages` in each file. `&` colors are supported; empty strings suppress the entire message and missing keys fall back to bundled text in the selected language. Restart after edits. Player and console command replies use the selected language; technical logs remain English.
+Find `durability` and change the `enabled: true` beneath it to `enabled: false`. An already broken elytra still cannot be used to start flying.
 
-## bStats metrics
+By default, the Unbreaking enchantment reduces durability consumption: higher levels make the elytra last longer. To set your own damage chance, see the `custom-chance` comments in the configuration file.
 
-bStats 3.2.1 is bundled with plugin ID **34208**; no additional plugin installation is needed. Only standard metrics are used, with no custom charts. Set `bstats.enabled: false` in ElytraFly’s config.yml and restart to disable this plugin’s metrics without initializing bStats. It defaults to true when absent; existing configurations can add the setting manually. The global `enabled` switch in plugins/bStats/config.yml is also respected: either switch can disable collection for this plugin. Metrics initialization failure does not prevent flight functionality.
+### Block flight in certain worlds
 
-## Build and verification
+Find `world-list` under `settings` and replace it with the following, keeping the leading spaces. This example blocks flight in the Nether and the End:
 
-Use Maven 3.x and preferably JDK 21 or 25 to build. The complete local API matrix requires JDK 25.
-
-```bash
-mvn clean verify
-./scripts/verify-release-jar.sh
-./scripts/verify-api-compatibility.sh
-# Selected APIs, using the same previously built JAR:
-./scripts/verify-api-compatibility.sh 1.9 1.21 26.3
+```yaml
+  world-list:
+    type: BLACKLIST
+    worlds:
+      - "world_nether"
+      - "world_the_end"
 ```
 
-Output: `target/ElytraFly-<version>.jar`. Regression tests cover configuration, sessions and durability rules. API checks use real API dependencies and test doubles in separate processes to check class loading, item adapters and basic flight behavior; they do not boot Minecraft.
+- Replace the world names with your server's actual names, including matching capitalization. These are usually the world folder names.
+- To allow flight only in the listed worlds, change `BLACKLIST` to `WHITELIST`.
+- To allow all worlds, use `BLACKLIST`, change the list to `worlds: []`, and remove the world-name lines starting with `-`.
 
-CI builds once and distributes the same JAR to its API/Java matrix. Artifact checks cover version, Java 8 bytecode, language resources, bStats relocation, signature metadata and accidentally bundled API/test dependencies. The unavailable historical Spigot 1.9 chat snapshot is replaced with a pinned `provided` build dependency; it is not bundled or used through proprietary chat APIs.
+### Language and messages
 
-## Releases and structure
+Change `language: zh_CN` to `language: en_US` for English messages.
 
-The Maven version is the single release version source and is filtered into `plugin.yml`. A version change pushed to `main` triggers the existing release workflow: tests, compatibility checks, JAR validation, SHA-256 and a non-overwriting Release. Suffixed versions are prereleases; manual release from `main` remains available.
+To edit in-game messages, open `plugins/ElytraFly/lang/en_US.yml` (or `zh_CN.yml` for Chinese) and change the text inside the quotes. You can use `&` color codes or set a message to `""` to hide it. Save and restart to apply changes.
 
-- `config`: immutable settings and message rendering.
-- `compat`: item adapters using public Bukkit APIs only.
-- `manager`: flight sessions and rules.
-- `command`, `listener`, `task`: command, event and periodic entry points.
-- `src/test`, `scripts`: regression tests and artifact verification.
+If you are upgrading from an older version, manually copy any custom `messages` from `config.yml` into the matching language file.
+
+### Disable usage statistics
+
+Find `bstats`, change the `enabled: true` beneath it to `enabled: false`, then save and restart.
+
+## Common questions
+
+- **No permission?** Ask an administrator to grant you `elytrafly.use`.
+- **Flight is enabled but you are still on the ground?** Double-tap jump to take off. Enabling flight does not lift you automatically.
+- **Already able to fly?** Creative mode, spectator mode or another plugin already lets you fly, so there is no need to enable it again. If multiple plugins use `/fly`, use `/elytrafly:fly` to select this plugin's command.
+- **Plugin stopped working after a configuration edit?** Check indentation and values. The server console will identify the setting with a problem. You can also restore your backup and restart.
+
+For other problems, [report an issue](https://github.com/Flock-YT/ElytraFly/issues) with your server version, steps to reproduce the problem and any error messages.
 
 [MIT license](LICENSE).

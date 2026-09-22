@@ -2,91 +2,88 @@
 
 # ElytraFly 鞘翅飞行插件
 
-[![CI](https://github.com/Flock-YT/ElytraFly/actions/workflows/compatibility-matrix.yml/badge.svg)](https://github.com/Flock-YT/ElytraFly/actions/workflows/compatibility-matrix.yml)
-[![许可证：MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
+穿上鞘翅，输入 `/fly`，就能像创造模式一样自由飞行，无需烟花。只有实际飞行时才会消耗耐久。
 
-穿戴可用的鞘翅，通过 `/fly` 开启类似创造模式的自由飞行。开启后需要自行起飞；只有实际飞行才会按配置消耗耐久。
+## 安装
 
-## 兼容范围
+1. 从 [下载页面](https://github.com/Flock-YT/ElytraFly/releases) 下载 `ElytraFly-版本号.jar`。
+2. 关闭服务端，将文件放入服务端的 `plugins` 文件夹，再启动服务端。
+3. 穿上有耐久的鞘翅，使用 OP 账号在生存模式下体验。
 
-目标覆盖 Minecraft **1.9—26.3**，使用传统 Bukkit 主线程模型的 CraftBukkit、Spigot、Paper、Purpur 及兼容分支。**不支持 Folia 的区域线程模型**，不对模组混合服作专项兼容承诺。
+适用于 Minecraft **1.9 至 26.3** 的 Bukkit、Spigot、Paper、Purpur 服务端，不支持 Folia。已进行自动兼容检查，尚未逐版本实服测试；建议先在测试服试用。
 
-发布单个 Java 8 字节码 JAR；服务器仍应使用它自身要求的 Java 版本（新服可能要求 Java 17、21、25 等）。Java 8 字节码并不代表新版 Minecraft 可以在 Java 8 上运行。
+升级时先备份 `plugins/ElytraFly` 文件夹，再停服替换旧插件文件。已有配置会保留。
 
-API 测试通过不等于所有服务端、所有补丁版本均已实测；真实服务端加载和游戏玩法尚未实测。
+## 怎么飞
 
-## 安装与升级
+1. 把鞘翅穿在胸甲栏，不能只放在背包里。
+2. 在游戏中输入 `/fly` 开启飞行。
+3. 像创造模式一样双击跳跃键起飞；默认按住空格上升、Shift 下降。
+4. 落地后再次输入 `/fly`，即可关闭。
 
-1. 停止服务端，备份现有插件 JAR 和 `plugins/ElytraFly/config.yml`。
-2. 安装 `ElytraFly-<版本>.jar`，不要安装 `original-` 开头的 Maven 中间产物。
-3. 启动服务端。首次安装自动生成配置，已有配置不会被覆盖。
-4. 修改配置后重启。配置非法时插件会拒绝启用，并在日志中说明具体键。
+**鞘翅损坏、脱下鞘翅或进入禁飞世界时会停止飞行，可能摔伤。** 请留意耐久，安全落地后再关闭。损坏的鞘翅会保留，可以修复后继续使用。死亡或重新登录后，需要重新输入 `/fly`。
 
-插件名称、`/fly`、权限节点和飞行设置保持不变。消息现改用独立语言文件，旧 `config.yml` 中的 `messages` 不再读取或自动迁移；自定义消息请手动复制到对应语言文件。缺失的设置使用默认值，不会自动重写用户文件。
+## 让普通玩家也能用
 
-## 指令、权限与飞行规则
+默认只有 OP 可以使用。请在你使用的权限插件中，给玩家或玩家组添加 `elytrafly.use` 权限；想让所有普通玩家都能用，就添加到默认玩家组。
 
-| 指令或权限 | 默认 | 用途 |
+| 权限名称 | 作用 | 默认谁有 |
 | --- | --- | --- |
-| `/fly` | 玩家命令 | 为自己开关鞘翅飞行；不接受额外参数。 |
-| `elytrafly.use` | OP | 允许开启并持续使用鞘翅飞行。 |
-| `elytrafly.bypass.durability` | 无人 | 不消耗耐久，但仍必须穿戴可用的鞘翅。 |
-| `elytrafly.bypass.world` | OP | 忽略世界白名单或黑名单。 |
+| `elytrafly.use` | 使用鞘翅飞行 | OP |
+| `elytrafly.bypass.durability` | 本插件飞行不消耗耐久，仍需穿戴可用鞘翅 | 无人 |
+| `elytrafly.bypass.world` | 在禁飞世界也能飞 | OP |
 
-- 创造、旁观模式及已经拥有飞行能力的玩家不会被接管。
-- 已开启的会话可以随时通过 `/fly` 关闭，即使权限、装备或世界条件已经改变。
-- 切换世界和尝试起飞时检查限制；定时任务持续检查权限、装备和耐久。权限或装备变化最迟在下个检查周期关闭飞行。
-- 死亡、重生、离线、被踢出或停用插件时清理会话，重新登录不自动恢复。
-- 切换到创造／旁观模式后，飞行交由服务端管理。
-- 耐久耗尽时保留可修复的鞘翅，不删除装备。关闭耐久消耗、绕过权限或不可破坏属性均不能让已损坏的鞘翅变为可用。
-- 停飞后按原版处理下落和伤害，不提供落地保护。
+**测试世界限制时，请使用没有绕过权限的普通玩家账号。** OP 默认不受世界限制。
 
-Bukkit 没有统一的飞行所有权标识。本插件拒绝接管开启前已有的飞行能力，也不会恢复被其他插件撤销的能力；但无法识别会话期间另一插件再次授予同一个 `allowFlight=true` 标志的情况。请避免让多个插件同时管理同一玩家的飞行。
+## 修改设置
 
-## 配置
+配置文件在 `plugins/ElytraFly/config.yml`，首次启动后自动生成。默认配置就能使用，按需修改即可。
 
-| 配置项 | 默认值 | 说明 |
-| --- | --- | --- |
-| `settings.check-interval` | `20` | 正整数，检查与扣耐久间隔，单位 tick；通常 20 tick 为一秒。 |
-| `settings.durability.enabled` | `true` | 实际飞行时是否尝试扣耐久。 |
-| `settings.durability.use-vanilla-formula` | `true` | 使用 `1 / (耐久附魔等级 + 1)` 的扣耐久概率。 |
-| `settings.durability.custom-chance` | `0.5` | 关闭原版概率公式后，每周期扣一点的概率，必须是有限的 `[0,1]` 数值。 |
-| `settings.world-list.type` | `BLACKLIST` | `BLACKLIST` 或 `WHITELIST`，模式名忽略大小写。 |
-| `settings.world-list.worlds` | 示例世界 | 世界名列表，精确匹配且区分大小写。 |
-| `language` | `zh_CN` | `zh_CN` 中文或 `en_US` 英文，重启生效；其他值拒绝启用。 |
+- `true` 表示开启，`false` 表示关闭。
+- 只改需要的值，保留每行开头的空格，不要用 Tab 缩进。
+- 保存后重启服务端生效，本插件没有重载命令。
 
-支持不可破坏属性及新版自定义最大耐久。损伤达到最大耐久减一时停飞；旧版 Bukkit 的鞘翅最大耐久报告差异由兼容层修正。插件直接修改装备损伤，不模拟原版滑翔，也不触发 `PlayerItemDamageEvent`；与第三方物品系统联动需单独确认。
+### 不想消耗耐久
 
-首次启动生成 `plugins/ElytraFly/lang/zh_CN.yml` 和 `en_US.yml`，已有文件不会覆盖。在对应文件的 `messages` 下定制文本与前缀；支持 `&` 颜色代码，空字符串关闭整条提示，缺失消息回退到所选语言的内置文本。修改语言文件后重启。玩家及控制台命令提示使用所选语言，技术日志保持英文。
+找到 `durability`，把它下面的 `enabled: true` 改为 `enabled: false`。即使关闭消耗，也不能用已经损坏的鞘翅起飞。
 
-## bStats 统计
+默认会考虑鞘翅的「耐久」附魔，等级越高越省耐久。想自己设置消耗概率，可以看配置文件中 `custom-chance` 的注释。
 
-插件内嵌 bStats 3.2.1，注册 ID 为 **34208**，无需额外安装插件。仅使用标准统计，不包含自定义图表。本插件 `config.yml` 的 `bstats.enabled` 默认为 `true`，设为 `false` 后重启即可关闭本插件统计，且不会初始化 bStats。已有配置可手动添加此项；缺失时默认开启。仍遵守 `plugins/bStats/config.yml` 的全局 `enabled` 开关，任一开关关闭均不收集本插件数据；统计初始化失败不会阻止飞行功能。
+### 禁止某些世界飞行
 
-## 构建与验证
+找到 `settings` 下面的 `world-list`，替换为以下内容，保留前面的空格。这个例子禁止在下界和末地使用：
 
-建议使用 JDK 21 或 25 和 Maven 3.x 构建；完整 API 矩阵本地运行需要 JDK 25。
-
-```bash
-mvn clean verify
-./scripts/verify-release-jar.sh
-./scripts/verify-api-compatibility.sh
-# 仅检查指定 API（使用此前构建的同一个 JAR）：
-./scripts/verify-api-compatibility.sh 1.9 1.21 26.3
+```yaml
+  world-list:
+    type: BLACKLIST
+    worlds:
+      - "world_nether"
+      - "world_the_end"
 ```
 
-产物：`target/ElytraFly-<版本>.jar`。回归测试覆盖配置、会话与耐久规则；API 测试在隔离进程中使用真实 API 和测试替身检查插件类加载、物品适配及基础飞行流程，不启动 Minecraft 服务端。
+- 把世界名换成你服务器实际使用的名称，大小写必须一致，通常就是世界文件夹名。
+- 想只允许列表中的世界飞行，把 `BLACKLIST` 改为 `WHITELIST`。
+- 想允许所有世界，使用 `BLACKLIST`，并把列表改成 `worlds: []`，删除下面以 `-` 开头的世界名。
 
-CI 先构建一次，再将同一 JAR 分发到 API／Java 矩阵。校验脚本检查版本、Java 8 字节码、双语资源、bStats 私有包重定位、签名及误打包的 API／测试依赖。Spigot 1.9 引用的旧聊天库快照已不可获取，构建使用固定 `provided` 聊天库代替；运行时不打包它，也不调用其专有接口。
+### 语言和提示文字
 
-## 发布与结构
+`language: zh_CN` 使用中文，改成 `language: en_US` 使用英文。
 
-`pom.xml` 是版本唯一来源，构建时写入 `plugin.yml`。推送到 `main` 的版本变更会触发现有发布流程；工作流执行测试、兼容矩阵、JAR 校验和 SHA-256 生成后创建不可覆盖的 Release。版本后缀标记为预发布，也支持从 `main` 手动发布。
+想修改游戏里的提示，打开 `plugins/ElytraFly/lang/zh_CN.yml`（英文对应 `en_US.yml`），修改引号里的文字即可。支持 `&` 颜色代码；改成 `""` 可以隐藏该条提示。保存后重启生效。
 
-- `config`：不可变配置与消息。
-- `compat`：仅使用公开 Bukkit API 的物品兼容层。
-- `manager`：飞行会话和业务规则。
-- `command`、`listener`、`task`：命令、事件与周期检查入口。
-- `src/test`、`scripts`：回归测试和产物验证。
+从旧版升级时，原来写在 `config.yml` 的 `messages` 提示需要手动复制到对应语言文件中。
+
+### 关闭使用统计
+
+找到 `bstats`，把它下面的 `enabled: true` 改成 `enabled: false`，保存后重启即可。
+
+## 常见问题
+
+- **提示没有权限？** 请让管理员给你添加 `elytrafly.use` 权限。
+- **提示开启了但没飞起来？** 开启后需要自己双击跳跃键，不会自动升空。
+- **提示已经拥有飞行能力？** 创造、旁观模式或其他插件已经允许你飞行，无需再次开启。若有多个插件使用 `/fly`，可用 `/elytrafly:fly` 指定本插件的命令。
+- **修改配置后插件不能用了？** 检查缩进和填写的值，服务端控制台会指出有问题的设置。也可以恢复备份后重启。
+
+遇到其他问题，可以到 [问题反馈](https://github.com/Flock-YT/ElytraFly/issues) 附上服务端版本、问题出现的步骤和报错信息。
 
 [MIT 许可证](LICENSE)。
