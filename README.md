@@ -63,7 +63,7 @@ Find `world-list` under `settings` and replace it with the following, keeping th
 
 - Replace the world names with your server's actual names, including matching capitalization. These are usually the world folder names.
 - To allow flight only in the listed worlds, change `BLACKLIST` to `WHITELIST`.
-- To allow all worlds, use `BLACKLIST`, change the list to `worlds: []`, and remove the world-name lines starting with `-`.
+- To allow all worlds, set `type: false`. Listed world names no longer restrict flight, but `worlds` must still be a list. Permissions, elytra equipment, and other flight requirements still apply.
 
 ### Language and messages
 

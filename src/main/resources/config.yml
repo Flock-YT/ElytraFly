@@ -35,12 +35,14 @@ settings:
   world-list:
     # BLACKLIST = 列表中的世界禁止飞行；WHITELIST = 只允许列表中的世界飞行。
     # BLACKLIST = block listed worlds; WHITELIST = allow only listed worlds.
+    # false = 关闭世界限制，允许所有世界，忽略下方列表中的世界名。
+    # false = disable world restrictions, allowing all worlds regardless of the names listed below.
     # OP 默认不受限制; 进入禁飞世界会停止飞行。
     # OPs bypass this by default; Entering a blocked world stops flight.
     type: BLACKLIST
     # 把示例换成实际世界名，大小写要一致，如 world_nether；每行一个。
-    # 不限制世界：保持 BLACKLIST，改为 worlds: [] 并删除下面的示例行。
+    # 不限制世界：设置 type: false；worlds 仍须保持列表格式。
     # Replace the example with actual world names, matching case, e.g. world_nether; one per line.
-    # To allow all worlds: keep BLACKLIST, use worlds: [] and remove the example line below.
+    # To allow all worlds: set type: false; worlds must still be a list.
     worlds:
       - "example_world_name"

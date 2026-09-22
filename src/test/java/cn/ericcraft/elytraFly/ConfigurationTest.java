@@ -36,6 +36,24 @@ class ConfigurationTest {
         FlightSettings settings = new FlightSettings(config);
         assertTrue(settings.allowsWorld("World")); assertFalse(settings.allowsWorld("world"));
     }
+    @Test void falseWorldModeAllowsAllWorldsFromYaml() throws Exception {
+        for (String mode : Arrays.asList("false", "False", "FALSE", "\"false\"", "\"False\"", "'fAlSe'")) {
+            YamlConfiguration config = new YamlConfiguration();
+            config.loadFromString("settings:\n  world-list:\n    type: " + mode + "\n    worlds: [world]\n");
+            FlightSettings settings = new FlightSettings(config);
+            assertTrue(settings.allowsWorld("world"), mode);
+            assertTrue(settings.allowsWorld("other_world"), mode);
+        }
+    }
+    @Test void disabledWorldRestrictionsStillValidateWorldList() {
+        YamlConfiguration config = new YamlConfiguration();
+        config.set("settings.world-list.type", false);
+        for (Object names : Arrays.asList("world", Arrays.asList("world", 7))) {
+            config.set("settings.world-list.worlds", names);
+            assertTrue(assertThrows(IllegalArgumentException.class, () -> new FlightSettings(config))
+                    .getMessage().contains("settings.world-list.worlds"));
+        }
+    }
     @Test void rejectsMalformedValuesWithTheirPaths() {
         invalid("bstats.enabled", "true"); invalid("bstats.enabled", 1);
         invalid("bstats", false);
@@ -46,6 +64,9 @@ class ConfigurationTest {
         invalid("settings.durability.custom-chance", -0.1); invalid("settings.durability.custom-chance", 1.1);
         invalid("settings.durability.enabled", "true");
         invalid("settings.world-list.type", "ALLOW");
+        invalid("settings.world-list.type", true);
+        invalid("settings.world-list.type", "true");
+        invalid("settings.world-list.type", 0);
         invalid("settings.world-list.worlds", "world");
         invalid("settings.world-list.worlds", Arrays.asList("world", 7));
         invalid("settings.durability", false);

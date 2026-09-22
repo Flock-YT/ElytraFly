@@ -100,6 +100,30 @@ class FlightManagerTest {
         assertStopped();
         when(player.hasPermission("elytrafly.bypass.world")).thenReturn(true); enable();
     }
+    @Test void disabledWorldRestrictionsAllowListedWorldAndWorldChangesWithoutBypass() {
+        config.set("settings.world-list.type", false);
+        config.set("settings.world-list.worlds", Collections.singletonList("blocked"));
+        rebuild();
+        assertFalse(player.hasPermission("elytrafly.bypass.world"));
+        when(player.getWorld().getName()).thenReturn("blocked");
+        enable();
+        flying.set(true);
+        FlightListener listener = new FlightListener(flights, messages);
+        for (String name : new String[] {"other_world", "blocked"}) {
+            when(player.getWorld().getName()).thenReturn(name);
+            listener.onWorldChange(new PlayerChangedWorldEvent(player, mock(World.class)));
+            flights.tick();
+            assertTrue(flights.hasSession(player.getUniqueId()));
+            assertTrue(allow.get());
+            assertTrue(flying.get());
+        }
+        when(player.hasPermission("elytrafly.use")).thenReturn(false);
+        flights.tick(); assertStopped();
+        when(player.hasPermission("elytrafly.use")).thenReturn(true);
+        enable();
+        when(inventory.getChestplate()).thenReturn(null);
+        flights.tick(); assertStopped();
+    }
     @Test void invalidTakeoffIsCancelled() {
         enable(); when(inventory.getChestplate()).thenReturn(null);
         PlayerToggleFlightEvent event = new PlayerToggleFlightEvent(player, true);

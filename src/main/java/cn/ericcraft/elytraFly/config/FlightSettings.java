@@ -14,6 +14,7 @@ public final class FlightSettings {
     public final boolean durabilityEnabled;
     public final boolean vanillaFormula;
     public final double customChance;
+    private final boolean worldRestrictionsDisabled;
     private final boolean whitelist;
     private final Set<String> worlds;
 
@@ -36,8 +37,9 @@ public final class FlightSettings {
         }
         Object type = value(config, "settings.world-list.type", "BLACKLIST");
         String mode = type instanceof String ? ((String) type).toUpperCase(Locale.ROOT) : "";
-        if (!mode.equals("BLACKLIST") && !mode.equals("WHITELIST")) {
-            throw invalid("settings.world-list.type", "must be BLACKLIST or WHITELIST");
+        worldRestrictionsDisabled = Boolean.FALSE.equals(type) || mode.equals("FALSE");
+        if (!worldRestrictionsDisabled && !mode.equals("BLACKLIST") && !mode.equals("WHITELIST")) {
+            throw invalid("settings.world-list.type", "must be BLACKLIST, WHITELIST or false");
         }
         whitelist = mode.equals("WHITELIST");
         Object names = value(config, "settings.world-list.worlds", Collections.singletonList("example_world_name"));
@@ -50,7 +52,7 @@ public final class FlightSettings {
         worlds = Collections.unmodifiableSet(copy);
     }
 
-    public boolean allowsWorld(String name) { return whitelist == worlds.contains(name); }
+    public boolean allowsWorld(String name) { return worldRestrictionsDisabled || whitelist == worlds.contains(name); }
 
     private static Object value(ConfigurationSection config, String path, Object fallback) {
         // Reject malformed parent sections instead of silently ignoring their values.
