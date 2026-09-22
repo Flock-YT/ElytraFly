@@ -2,6 +2,8 @@
 
 # ElytraPlus
 
+[![ElytraPlus Plugin Installation Chart](https://bstats.org/signatures/bukkit/ElytraPlus.svg)](https://bstats.org/plugin/bukkit/ElytraPlus/34208)
+
 Wear an elytra and use `/fly` to fly like in creative mode, without fireworks. Durability is consumed only while you are actually flying.
 
 ## Installation
