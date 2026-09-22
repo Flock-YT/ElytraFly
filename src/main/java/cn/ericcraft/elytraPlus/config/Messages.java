@@ -1,4 +1,4 @@
-package cn.ericcraft.elytraFly.config;
+package cn.ericcraft.elytraPlus.config;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

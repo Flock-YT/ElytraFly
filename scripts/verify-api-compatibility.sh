@@ -3,8 +3,8 @@ set -euo pipefail
 project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$project_root"
 version="$(mvn -q -Dstyle.color=never help:evaluate -Dexpression=project.version -DforceStdout)"
-artifact="$project_root/target/ElytraFly-$version.jar"
-if [[ ! -f "$artifact" || ! -f target/test-classes/cn/ericcraft/elytraFly/ApiSmoke.class ]]; then
+artifact="$project_root/target/ElytraPlus-$version.jar"
+if [[ ! -f "$artifact" || ! -f target/test-classes/cn/ericcraft/elytraPlus/ApiSmoke.class ]]; then
   echo 'Run mvn clean verify first (the production JAR and harness must already exist).' >&2
   exit 1
 fi
@@ -22,7 +22,7 @@ for api in "$@"; do
     "-Dmdep.outputFile=$classpath_file"
   echo "Checking API $api with unchanged artifact"
   java -cp "$artifact:$project_root/target/test-classes:$(cat "$classpath_file")" \
-    cn.ericcraft.elytraFly.ApiSmoke "$artifact" 2>&1 | tee "target/compatibility/$api.log"
+    cn.ericcraft.elytraPlus.ApiSmoke "$artifact" 2>&1 | tee "target/compatibility/$api.log"
 done
 [[ "$before" == "$(shasum -a 256 "$artifact")" ]] || { echo 'Artifact changed during verification' >&2; exit 1; }
 echo "$before" > target/compatibility/artifact.sha256

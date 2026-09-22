@@ -1,6 +1,6 @@
-package cn.ericcraft.elytraFly.task;
+package cn.ericcraft.elytraPlus.task;
 
-import cn.ericcraft.elytraFly.manager.FlightManager;
+import cn.ericcraft.elytraPlus.manager.FlightManager;
 
 public final class FlightCheckTask implements Runnable {
     private final FlightManager flights;

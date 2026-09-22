@@ -1,7 +1,7 @@
-package cn.ericcraft.elytraFly.command;
+package cn.ericcraft.elytraPlus.command;
 
-import cn.ericcraft.elytraFly.config.Messages;
-import cn.ericcraft.elytraFly.manager.FlightManager;
+import cn.ericcraft.elytraPlus.config.Messages;
+import cn.ericcraft.elytraPlus.manager.FlightManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

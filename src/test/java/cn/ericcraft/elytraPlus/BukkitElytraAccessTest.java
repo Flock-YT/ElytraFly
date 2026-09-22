@@ -1,6 +1,6 @@
-package cn.ericcraft.elytraFly;
+package cn.ericcraft.elytraPlus;
 
-import cn.ericcraft.elytraFly.compat.BukkitElytraAccess;
+import cn.ericcraft.elytraPlus.compat.BukkitElytraAccess;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;

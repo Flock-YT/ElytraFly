@@ -1,6 +1,6 @@
 # Supports & color codes. An empty string suppresses the entire message.
 messages:
-  prefix: "&b[ElytraFly] "
+  prefix: "&b[ElytraPlus] "
   no-permission: "&cYou do not have permission to use this command."
   only-player: "Only players can use this command."
   elytra-broken: "&cYour elytra is broken. You cannot fly!"

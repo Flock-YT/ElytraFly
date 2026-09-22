@@ -1,8 +1,8 @@
-package cn.ericcraft.elytraFly.manager;
+package cn.ericcraft.elytraPlus.manager;
 
-import cn.ericcraft.elytraFly.compat.ElytraAccess;
-import cn.ericcraft.elytraFly.config.FlightSettings;
-import cn.ericcraft.elytraFly.config.Messages;
+import cn.ericcraft.elytraPlus.compat.ElytraAccess;
+import cn.ericcraft.elytraPlus.config.FlightSettings;
+import cn.ericcraft.elytraPlus.config.Messages;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -106,7 +106,7 @@ public final class FlightManager {
 
     private void checkAndDamage(Player player) {
         if (!validate(player) || !player.isFlying() || !settings.durabilityEnabled ||
-                player.hasPermission("elytrafly.bypass.durability")) return;
+                player.hasPermission("elytraplus.bypass.durability")) return;
         ItemStack chest = player.getInventory().getChestplate();
         if (items.isUnbreakable(chest)) return;
         double chance = settings.vanillaFormula ? 1.0 / (items.unbreakingLevel(chest) + 1.0) : settings.customChance;
@@ -129,8 +129,8 @@ public final class FlightManager {
     }
 
     private String rejection(Player player, boolean active) {
-        if (!player.hasPermission("elytrafly.use")) return active ? "permission-revoked" : "no-permission";
-        if (!settings.allowsWorld(player.getWorld().getName()) && !player.hasPermission("elytrafly.bypass.world")) {
+        if (!player.hasPermission("elytraplus.use")) return active ? "permission-revoked" : "no-permission";
+        if (!settings.allowsWorld(player.getWorld().getName()) && !player.hasPermission("elytraplus.bypass.world")) {
             return "world-disabled";
         }
         ItemStack chest = player.getInventory().getChestplate();

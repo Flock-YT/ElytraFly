@@ -1,9 +1,9 @@
-package cn.ericcraft.elytraFly;
+package cn.ericcraft.elytraPlus;
 
-import cn.ericcraft.elytraFly.compat.BukkitElytraAccess;
-import cn.ericcraft.elytraFly.config.FlightSettings;
-import cn.ericcraft.elytraFly.config.Messages;
-import cn.ericcraft.elytraFly.manager.FlightManager;
+import cn.ericcraft.elytraPlus.compat.BukkitElytraAccess;
+import cn.ericcraft.elytraPlus.config.FlightSettings;
+import cn.ericcraft.elytraPlus.config.Messages;
+import cn.ericcraft.elytraPlus.manager.FlightManager;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -29,7 +29,7 @@ public final class ApiSmoke {
         try (JarFile jar = new JarFile(args[0])) {
             org.bukkit.plugin.PluginDescriptionFile descriptor = new org.bukkit.plugin.PluginDescriptionFile(
                     jar.getInputStream(jar.getJarEntry("plugin.yml")));
-            check(descriptor.getMain().equals("cn.ericcraft.elytraFly.ElytraFly"), "plugin descriptor loads");
+            check(descriptor.getMain().equals("cn.ericcraft.elytraPlus.ElytraPlus"), "plugin descriptor loads");
             java.util.Enumeration<java.util.jar.JarEntry> entries = jar.entries();
             while (entries.hasMoreElements()) {
                 String name = entries.nextElement().getName();
@@ -79,7 +79,7 @@ public final class ApiSmoke {
                 case "getUniqueId": return uuid;
                 case "isOnline": return true;
                 case "getGameMode": return GameMode.SURVIVAL;
-                case "hasPermission": return "elytrafly.use".equals(a[0]);
+                case "hasPermission": return "elytraplus.use".equals(a[0]);
                 case "getInventory": return inventory;
                 case "getWorld": return world;
                 case "getAllowFlight": return allow;
@@ -105,7 +105,7 @@ public final class ApiSmoke {
      * conflicting clone return types. Only this test fixture is compiled at runtime.
      */
     private static Class<?> combinedMeta() throws Exception {
-        java.nio.file.Path directory = java.nio.file.Files.createTempDirectory("elytrafly-api-meta-");
+        java.nio.file.Path directory = java.nio.file.Files.createTempDirectory("elytraplus-api-meta-");
         java.nio.file.Path source = directory.resolve("MixedMeta.java");
         String code = "public interface MixedMeta extends org.bukkit.inventory.meta.ItemMeta, "
                 + "org.bukkit.inventory.meta.Damageable { MixedMeta clone(); }";

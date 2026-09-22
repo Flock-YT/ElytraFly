@@ -1,18 +1,18 @@
 [English](README.md) | **中文**
 
-# ElytraFly 鞘翅飞行插件
+# ElytraPlus 鞘翅飞行插件
 
 穿上鞘翅，输入 `/fly`，就能像创造模式一样自由飞行，无需烟花。只有实际飞行时才会消耗耐久。
 
 ## 安装
 
-1. 从 [下载页面](https://github.com/Flock-YT/ElytraFly/releases) 下载 `ElytraFly-版本号.jar`。
+1. 从 [下载页面](https://github.com/Flock-YT/ElytraPlus/releases) 下载 `ElytraPlus-版本号.jar`。
 2. 关闭服务端，将文件放入服务端的 `plugins` 文件夹，再启动服务端。
 3. 穿上有耐久的鞘翅，使用 OP 账号在生存模式下体验。
 
 适用于 Minecraft **1.9 至 26.3** 的 Bukkit、Spigot、Paper、Purpur 服务端，不支持 Folia。已进行自动兼容检查，尚未逐版本实服测试；建议先在测试服试用。
 
-升级时先备份 `plugins/ElytraFly` 文件夹，再停服替换旧插件文件。已有配置会保留。
+升级时先备份 `plugins/ElytraPlus` 文件夹，再停服替换旧插件文件。已有配置会保留。
 
 ## 怎么飞
 
@@ -25,19 +25,19 @@
 
 ## 让普通玩家也能用
 
-默认只有 OP 可以使用。请在你使用的权限插件中，给玩家或玩家组添加 `elytrafly.use` 权限；想让所有普通玩家都能用，就添加到默认玩家组。
+默认只有 OP 可以使用。请在你使用的权限插件中，给玩家或玩家组添加 `elytraplus.use` 权限；想让所有普通玩家都能用，就添加到默认玩家组。
 
 | 权限名称 | 作用 | 默认谁有 |
 | --- | --- | --- |
-| `elytrafly.use` | 使用鞘翅飞行 | OP |
-| `elytrafly.bypass.durability` | 本插件飞行不消耗耐久，仍需穿戴可用鞘翅 | 无人 |
-| `elytrafly.bypass.world` | 在禁飞世界也能飞 | OP |
+| `elytraplus.use` | 使用鞘翅飞行 | OP |
+| `elytraplus.bypass.durability` | 本插件飞行不消耗耐久，仍需穿戴可用鞘翅 | 无人 |
+| `elytraplus.bypass.world` | 在禁飞世界也能飞 | OP |
 
 **测试世界限制时，请使用没有绕过权限的普通玩家账号。** OP 默认不受世界限制。
 
 ## 修改设置
 
-配置文件在 `plugins/ElytraFly/config.yml`，首次启动后自动生成。默认配置就能使用，按需修改即可。
+配置文件在 `plugins/ElytraPlus/config.yml`，首次启动后自动生成。默认配置就能使用，按需修改即可。
 
 - `true` 表示开启，`false` 表示关闭。
 - 只改需要的值，保留每行开头的空格，不要用 Tab 缩进。
@@ -71,7 +71,7 @@
 
 `language: zh_CN` 使用中文，改成 `language: en_US` 使用英文。
 
-想修改游戏里的提示，打开 `plugins/ElytraFly/lang/zh_CN.yml`（英文对应 `en_US.yml`），修改引号里的文字即可。支持 `&` 颜色代码；改成 `""` 可以隐藏该条提示。保存后重启生效。
+想修改游戏里的提示，打开 `plugins/ElytraPlus/lang/zh_CN.yml`（英文对应 `en_US.yml`），修改引号里的文字即可。支持 `&` 颜色代码；改成 `""` 可以隐藏该条提示。保存后重启生效。
 
 从旧版升级时，原来写在 `config.yml` 的 `messages` 提示需要手动复制到对应语言文件中。
 
@@ -81,11 +81,11 @@
 
 ## 常见问题
 
-- **提示没有权限？** 请让管理员给你添加 `elytrafly.use` 权限。
+- **提示没有权限？** 请让管理员给你添加 `elytraplus.use` 权限。
 - **提示开启了但没飞起来？** 开启后需要自己双击跳跃键，不会自动升空。
-- **提示已经拥有飞行能力？** 创造、旁观模式或其他插件已经允许你飞行，无需再次开启。若有多个插件使用 `/fly`，可用 `/elytrafly:fly` 指定本插件的命令。
+- **提示已经拥有飞行能力？** 创造、旁观模式或其他插件已经允许你飞行，无需再次开启。若有多个插件使用 `/fly`，可用 `/elytraplus:fly` 指定本插件的命令。
 - **修改配置后插件不能用了？** 检查缩进和填写的值，服务端控制台会指出有问题的设置。也可以恢复备份后重启。
 
-遇到其他问题，可以到 [问题反馈](https://github.com/Flock-YT/ElytraFly/issues) 附上服务端版本、问题出现的步骤和报错信息。
+遇到其他问题，可以到 [问题反馈](https://github.com/Flock-YT/ElytraPlus/issues) 附上服务端版本、问题出现的步骤和报错信息。
 
 [MIT 许可证](LICENSE)。

@@ -15,7 +15,7 @@ if [[ ! "$expected_sha256" =~ ^[0-9a-f]{64}$ ]]; then
   exit 1
 fi
 
-artifact="ElytraFly-$version.jar"
+artifact="ElytraPlus-$version.jar"
 cd "$artifact_directory"
 shasum -a 256 -c "$artifact.sha256"
 actual_sha256="$(shasum -a 256 "$artifact")"
@@ -27,7 +27,7 @@ fi
 
 release_args=(release create "v$version" "$artifact" "$artifact.sha256"
   --target "${GITHUB_SHA:?Missing release commit SHA}"
-  --title "ElytraFly v$version"
+  --title "ElytraPlus v$version"
   --generate-notes)
 if [[ ! "$version" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
   release_args+=(--prerelease --latest=false)

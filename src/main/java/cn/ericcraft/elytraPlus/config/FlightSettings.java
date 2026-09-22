@@ -1,4 +1,4 @@
-package cn.ericcraft.elytraFly.config;
+package cn.ericcraft.elytraPlus.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 import java.util.Collections;

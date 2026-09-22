@@ -1,10 +1,10 @@
-package cn.ericcraft.elytraFly;
+package cn.ericcraft.elytraPlus;
 
-import cn.ericcraft.elytraFly.command.FlyCommand;
-import cn.ericcraft.elytraFly.compat.ElytraAccess;
-import cn.ericcraft.elytraFly.config.FlightSettings;
-import cn.ericcraft.elytraFly.config.Messages;
-import cn.ericcraft.elytraFly.manager.FlightManager;
+import cn.ericcraft.elytraPlus.command.FlyCommand;
+import cn.ericcraft.elytraPlus.compat.ElytraAccess;
+import cn.ericcraft.elytraPlus.config.FlightSettings;
+import cn.ericcraft.elytraPlus.config.Messages;
+import cn.ericcraft.elytraPlus.manager.FlightManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;

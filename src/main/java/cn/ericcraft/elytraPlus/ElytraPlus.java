@@ -1,12 +1,12 @@
-package cn.ericcraft.elytraFly;
+package cn.ericcraft.elytraPlus;
 
-import cn.ericcraft.elytraFly.command.FlyCommand;
-import cn.ericcraft.elytraFly.compat.BukkitElytraAccess;
-import cn.ericcraft.elytraFly.config.FlightSettings;
-import cn.ericcraft.elytraFly.config.Messages;
-import cn.ericcraft.elytraFly.listener.FlightListener;
-import cn.ericcraft.elytraFly.manager.FlightManager;
-import cn.ericcraft.elytraFly.task.FlightCheckTask;
+import cn.ericcraft.elytraPlus.command.FlyCommand;
+import cn.ericcraft.elytraPlus.compat.BukkitElytraAccess;
+import cn.ericcraft.elytraPlus.config.FlightSettings;
+import cn.ericcraft.elytraPlus.config.Messages;
+import cn.ericcraft.elytraPlus.listener.FlightListener;
+import cn.ericcraft.elytraPlus.manager.FlightManager;
+import cn.ericcraft.elytraPlus.task.FlightCheckTask;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
-public final class ElytraFly extends JavaPlugin {
+public final class ElytraPlus extends JavaPlugin {
     private FlightManager flights;
     private BukkitTask task;
     private Metrics metrics;
@@ -37,9 +37,9 @@ public final class ElytraFly extends JavaPlugin {
             command.setExecutor(new FlyCommand(flights, messages));
             getServer().getPluginManager().registerEvents(new FlightListener(flights, messages), this);
             task = getServer().getScheduler().runTaskTimer(this, new FlightCheckTask(flights), settings.interval, settings.interval);
-            getLogger().info("ElytraFly enabled (Bukkit compatibility mode).");
+            getLogger().info("ElytraPlus enabled (Bukkit compatibility mode).");
         } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "Cannot enable ElytraFly: " + e.getMessage(), e);
+            getLogger().log(Level.SEVERE, "Cannot enable ElytraPlus: " + e.getMessage(), e);
             getServer().getPluginManager().disablePlugin(this);
             return;
         }

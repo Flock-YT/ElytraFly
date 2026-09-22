@@ -1,7 +1,7 @@
-package cn.ericcraft.elytraFly;
+package cn.ericcraft.elytraPlus;
 
-import cn.ericcraft.elytraFly.config.FlightSettings;
-import cn.ericcraft.elytraFly.config.Messages;
+import cn.ericcraft.elytraPlus.config.FlightSettings;
+import cn.ericcraft.elytraPlus.config.Messages;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.junit.jupiter.api.Test;
@@ -109,7 +109,7 @@ class ConfigurationTest {
         reset(sender);
         config.set("language", "en_US");
         load(config).send(sender, "flight-enabled");
-        verify(sender).sendMessage("§b[ElytraFly] §aElytra flight enabled!");
+        verify(sender).sendMessage("§b[ElytraPlus] §aElytra flight enabled!");
     }
 
     @Test void preservesCustomFilesAndUsesSelectedLanguageFallback() throws Exception {

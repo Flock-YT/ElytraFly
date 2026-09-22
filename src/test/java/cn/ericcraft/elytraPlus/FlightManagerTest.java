@@ -1,10 +1,10 @@
-package cn.ericcraft.elytraFly;
+package cn.ericcraft.elytraPlus;
 
-import cn.ericcraft.elytraFly.compat.ElytraAccess;
-import cn.ericcraft.elytraFly.config.FlightSettings;
-import cn.ericcraft.elytraFly.config.Messages;
-import cn.ericcraft.elytraFly.manager.FlightManager;
-import cn.ericcraft.elytraFly.listener.FlightListener;
+import cn.ericcraft.elytraPlus.compat.ElytraAccess;
+import cn.ericcraft.elytraPlus.config.FlightSettings;
+import cn.ericcraft.elytraPlus.config.Messages;
+import cn.ericcraft.elytraPlus.manager.FlightManager;
+import cn.ericcraft.elytraPlus.listener.FlightListener;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -48,7 +48,7 @@ class FlightManagerTest {
         when(player.getUniqueId()).thenReturn(UUID.randomUUID());
         when(player.isOnline()).thenReturn(true);
         when(player.getGameMode()).thenReturn(GameMode.SURVIVAL);
-        when(player.hasPermission("elytrafly.use")).thenReturn(true);
+        when(player.hasPermission("elytraplus.use")).thenReturn(true);
         when(player.getInventory()).thenReturn(inventory);
         when(inventory.getChestplate()).thenReturn(elytra);
         when(elytra.getType()).thenReturn(Material.ELYTRA);
@@ -77,7 +77,7 @@ class FlightManagerTest {
         verify(items, never()).damageOne(any());
     }
     @Test void toggleOffWorksAfterAllRequirementsAreLost() {
-        enable(); when(player.hasPermission("elytrafly.use")).thenReturn(false);
+        enable(); when(player.hasPermission("elytraplus.use")).thenReturn(false);
         when(inventory.getChestplate()).thenReturn(null);
         flights.toggle(player); assertStopped();
     }
@@ -90,7 +90,7 @@ class FlightManagerTest {
         flights.toggle(player); assertFalse(flights.hasSession(player.getUniqueId()));
     }
     @Test void permissionRevocationStopsFlight() {
-        enable(); flying.set(true); when(player.hasPermission("elytrafly.use")).thenReturn(false);
+        enable(); flying.set(true); when(player.hasPermission("elytraplus.use")).thenReturn(false);
         flights.tick(); assertStopped();
     }
     @Test void worldChangeStopsImmediatelyAndBypassAllowsIt() {
@@ -99,13 +99,13 @@ class FlightManagerTest {
         when(player.getWorld().getName()).thenReturn("blocked");
         new FlightListener(flights, messages).onWorldChange(new PlayerChangedWorldEvent(player, mock(World.class)));
         assertStopped();
-        when(player.hasPermission("elytrafly.bypass.world")).thenReturn(true); enable();
+        when(player.hasPermission("elytraplus.bypass.world")).thenReturn(true); enable();
     }
     @Test void disabledWorldRestrictionsAllowListedWorldAndWorldChangesWithoutBypass() {
         config.set("settings.world-list.type", false);
         config.set("settings.world-list.worlds", Collections.singletonList("blocked"));
         rebuild();
-        assertFalse(player.hasPermission("elytrafly.bypass.world"));
+        assertFalse(player.hasPermission("elytraplus.bypass.world"));
         when(player.getWorld().getName()).thenReturn("blocked");
         enable();
         flying.set(true);
@@ -118,9 +118,9 @@ class FlightManagerTest {
             assertTrue(allow.get());
             assertTrue(flying.get());
         }
-        when(player.hasPermission("elytrafly.use")).thenReturn(false);
+        when(player.hasPermission("elytraplus.use")).thenReturn(false);
         flights.tick(); assertStopped();
-        when(player.hasPermission("elytrafly.use")).thenReturn(true);
+        when(player.hasPermission("elytraplus.use")).thenReturn(true);
         enable();
         when(inventory.getChestplate()).thenReturn(null);
         flights.tick(); assertStopped();
@@ -136,7 +136,7 @@ class FlightManagerTest {
         when(items.isUsable(elytra)).thenReturn(false); flights.tick(); assertStopped();
     }
     @Test void bypassDoesNotAllowBrokenElytra() {
-        enable(); when(player.hasPermission("elytrafly.bypass.durability")).thenReturn(true);
+        enable(); when(player.hasPermission("elytraplus.bypass.durability")).thenReturn(true);
         when(items.isUsable(elytra)).thenReturn(false); flights.tick(); assertStopped();
     }
     @Test void exhaustedElytraRemainsEquipped() {
@@ -149,7 +149,7 @@ class FlightManagerTest {
         enable(); flying.set(true); when(items.isUnbreakable(elytra)).thenReturn(true);
         flights.tick(); verify(items, never()).damageOne(any());
         when(items.isUnbreakable(elytra)).thenReturn(false);
-        when(player.hasPermission("elytrafly.bypass.durability")).thenReturn(true);
+        when(player.hasPermission("elytraplus.bypass.durability")).thenReturn(true);
         flights.tick(); verify(items, never()).damageOne(any());
     }
     @Test void unbreakingProbabilityHasDeterministicBoundary() {

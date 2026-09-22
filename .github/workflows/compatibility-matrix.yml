@@ -1,4 +1,4 @@
-name: ElytraFly CI
+name: ElytraPlus CI
 
 on:
   push:
@@ -37,7 +37,7 @@ jobs:
         with:
           name: compatibility-input
           path: |
-            target/ElytraFly-*.jar
+            target/ElytraPlus-*.jar
             target/test-classes/
           if-no-files-found: error
 

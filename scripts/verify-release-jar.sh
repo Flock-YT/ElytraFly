@@ -12,7 +12,7 @@ read_project_version() {
 }
 
 expected_version="${2:-$(read_project_version)}"
-jar_path="${1:-target/ElytraFly-${expected_version}.jar}"
+jar_path="${1:-target/ElytraPlus-${expected_version}.jar}"
 
 if [[ "$jar_path" = /* ]]; then
     absolute_jar_path="$jar_path"
@@ -44,12 +44,12 @@ if ! printf '%s\n' "$jar_entries" | grep -Eq '^config\.yml$'; then
     exit 1
 fi
 
-if ! printf '%s\n' "$jar_entries" | grep -Eq '^cn/ericcraft/elytraFly/ElytraFly\.class$'; then
+if ! printf '%s\n' "$jar_entries" | grep -Eq '^cn/ericcraft/elytraPlus/ElytraPlus\.class$'; then
     echo "Plugin main class is missing from $jar_path." >&2
     exit 1
 fi
 
-for required_entry in lang/zh_CN.yml lang/en_US.yml cn/ericcraft/elytraFly/lib/bstats/bukkit/Metrics.class cn/ericcraft/elytraFly/lib/bstats/MetricsBase.class; do
+for required_entry in lang/zh_CN.yml lang/en_US.yml cn/ericcraft/elytraPlus/lib/bstats/bukkit/Metrics.class cn/ericcraft/elytraPlus/lib/bstats/MetricsBase.class; do
     if ! printf '%s\n' "$jar_entries" | grep -Fx "$required_entry" > /dev/null; then
         echo "Required bundled resource or relocated bStats class missing: $required_entry" >&2
         exit 1
@@ -88,7 +88,7 @@ if ! grep -Eq "^api-version: ['\"]?1\\.13['\"]?$" "$temporary_directory/plugin.y
     exit 1
 fi
 
-if printf '%s\n' "$jar_entries" | grep -Eq '^(org/bstats/|org/bukkit/|org/junit/|org/mockito/|net/bytebuddy/|net/md_5/|cn/ericcraft/elytraFly/.*(Test|ApiSmoke)[^/]*\.class$)'; then
+if printf '%s\n' "$jar_entries" | grep -Eq '^(org/bstats/|org/bukkit/|org/junit/|org/mockito/|net/bytebuddy/|net/md_5/|cn/ericcraft/elytraPlus/.*(Test|ApiSmoke)[^/]*\.class$)'; then
     echo "Unrelocated bStats, Bukkit API, chat library, test classes and test dependencies must not be bundled in $jar_path." >&2
     exit 1
 fi

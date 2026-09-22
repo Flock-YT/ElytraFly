@@ -1,7 +1,7 @@
-package cn.ericcraft.elytraFly.listener;
+package cn.ericcraft.elytraPlus.listener;
 
-import cn.ericcraft.elytraFly.config.Messages;
-import cn.ericcraft.elytraFly.manager.FlightManager;
+import cn.ericcraft.elytraPlus.config.Messages;
+import cn.ericcraft.elytraPlus.manager.FlightManager;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

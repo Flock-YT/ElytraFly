@@ -1,4 +1,4 @@
-package cn.ericcraft.elytraFly.compat;
+package cn.ericcraft.elytraPlus.compat;
 
 import org.bukkit.inventory.ItemStack;
 
