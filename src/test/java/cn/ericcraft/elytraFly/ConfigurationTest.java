@@ -25,7 +25,7 @@ class ConfigurationTest {
         config.set("bstats.enabled", false);
         assertFalse(new FlightSettings(config).metricsEnabled);
         assertTrue(settings.metricsEnabled);
-        assertTrue(settings.allowsWorld("world")); assertFalse(settings.allowsWorld("example_world_name"));
+        assertTrue(settings.allowsWorld("world")); assertTrue(settings.allowsWorld("example_world_name"));
         config.set("settings.world-list.worlds", Collections.singletonList("world"));
         assertTrue(settings.allowsWorld("world"));
     }
@@ -35,6 +35,13 @@ class ConfigurationTest {
         config.set("settings.world-list.worlds", Arrays.asList("World", "World"));
         FlightSettings settings = new FlightSettings(config);
         assertTrue(settings.allowsWorld("World")); assertFalse(settings.allowsWorld("world"));
+    }
+    @Test void blacklistBlocksListedWorlds() {
+        YamlConfiguration config = new YamlConfiguration();
+        config.set("settings.world-list.type", "blacklist");
+        config.set("settings.world-list.worlds", Collections.singletonList("blocked"));
+        FlightSettings settings = new FlightSettings(config);
+        assertFalse(settings.allowsWorld("blocked")); assertTrue(settings.allowsWorld("world"));
     }
     @Test void falseWorldModeAllowsAllWorldsFromYaml() throws Exception {
         for (String mode : Arrays.asList("false", "False", "FALSE", "\"false\"", "\"False\"", "'fAlSe'")) {

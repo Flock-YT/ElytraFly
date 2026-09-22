@@ -35,7 +35,7 @@ public final class FlightSettings {
         if (Double.isNaN(customChance) || Double.isInfinite(customChance) || customChance < 0 || customChance > 1) {
             throw invalid("settings.durability.custom-chance", "must be finite and in [0, 1]");
         }
-        Object type = value(config, "settings.world-list.type", "BLACKLIST");
+        Object type = value(config, "settings.world-list.type", false);
         String mode = type instanceof String ? ((String) type).toUpperCase(Locale.ROOT) : "";
         worldRestrictionsDisabled = Boolean.FALSE.equals(type) || mode.equals("FALSE");
         if (!worldRestrictionsDisabled && !mode.equals("BLACKLIST") && !mode.equals("WHITELIST")) {

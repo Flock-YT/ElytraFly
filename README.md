@@ -51,6 +51,8 @@ By default, the Unbreaking enchantment reduces durability consumption: higher le
 
 ### Block flight in certain worlds
 
+World restrictions are disabled by default (`type: false`).
+
 Find `world-list` under `settings` and replace it with the following, keeping the leading spaces. This example blocks flight in the Nether and the End:
 
 ```yaml

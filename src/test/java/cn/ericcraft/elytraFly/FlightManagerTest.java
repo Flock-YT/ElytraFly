@@ -94,6 +94,7 @@ class FlightManagerTest {
         flights.tick(); assertStopped();
     }
     @Test void worldChangeStopsImmediatelyAndBypassAllowsIt() {
+        config.set("settings.world-list.type", "BLACKLIST");
         config.set("settings.world-list.worlds", Collections.singletonList("blocked")); rebuild(); enable();
         when(player.getWorld().getName()).thenReturn("blocked");
         new FlightListener(flights, messages).onWorldChange(new PlayerChangedWorldEvent(player, mock(World.class)));

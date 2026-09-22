@@ -39,10 +39,10 @@ settings:
     # false = disable world restrictions, allowing all worlds regardless of the names listed below.
     # OP 默认不受限制; 进入禁飞世界会停止飞行。
     # OPs bypass this by default; Entering a blocked world stops flight.
-    type: BLACKLIST
+    type: false
     # 把示例换成实际世界名，大小写要一致，如 world_nether；每行一个。
-    # 不限制世界：设置 type: false；worlds 仍须保持列表格式。
+    # 默认不限制世界；如需启用，把 type 改为 BLACKLIST 或 WHITELIST。
     # Replace the example with actual world names, matching case, e.g. world_nether; one per line.
-    # To allow all worlds: set type: false; worlds must still be a list.
+    # World restrictions are disabled by default; set type to BLACKLIST or WHITELIST to enable them.
     worlds:
       - "example_world_name"
