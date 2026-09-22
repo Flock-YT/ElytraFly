@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import java.lang.reflect.Proxy;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.jar.JarFile;
@@ -46,7 +45,7 @@ public final class ApiSmoke {
         try { metaType = Class.forName("org.bukkit.inventory.meta.Damageable"); }
         catch (ClassNotFoundException e) { metaType = ItemMeta.class; }
         if (!ItemMeta.class.isAssignableFrom(metaType)) metaType = combinedMeta();
-        ItemMeta meta = (ItemMeta) Proxy.newProxyInstance(metaType.getClassLoader(), new Class<?>[]{metaType}, (p, m, a) -> {
+        ItemMeta meta = (ItemMeta) mock(metaType, (p, m, a) -> {
             switch (m.getName()) {
                 case "getDamage": return damage;
                 case "setDamage": damage = (Integer) a[0]; return null;
@@ -72,10 +71,10 @@ public final class ApiSmoke {
         check(access.unbreakingLevel(item) == 0, "unenchanted item supported");
         check(!access.isUsable(null), "missing item rejected");
         maximum = 432; damage = 0; unbreakable = false;
-        World world = proxy(World.class, (p, m, a) -> m.getName().equals("getName") ? "world" : defaultValue(m.getReturnType()));
-        PlayerInventory inventory = proxy(PlayerInventory.class, (p, m, a) -> m.getName().equals("getChestplate") ? item : defaultValue(m.getReturnType()));
+        World world = mock(World.class, (p, m, a) -> m.getName().equals("getName") ? "world" : defaultValue(m.getReturnType()));
+        PlayerInventory inventory = mock(PlayerInventory.class, (p, m, a) -> m.getName().equals("getChestplate") ? item : defaultValue(m.getReturnType()));
         UUID uuid = UUID.randomUUID();
-        Player player = proxy(Player.class, (p, m, a) -> {
+        Player player = mock(Player.class, (p, m, a) -> {
             switch (m.getName()) {
                 case "getUniqueId": return uuid;
                 case "isOnline": return true;
@@ -102,8 +101,8 @@ public final class ApiSmoke {
     }
 
     /** Early Damageable did not extend ItemMeta and both declare clone().
-     * A covariant test interface is needed because java.lang.Proxy cannot merge
-     * unrelated clone return types. Only this test fixture is compiled at runtime.
+     * A covariant test interface makes the fixture assignable to both without
+     * conflicting clone return types. Only this test fixture is compiled at runtime.
      */
     private static Class<?> combinedMeta() throws Exception {
         java.nio.file.Path directory = java.nio.file.Files.createTempDirectory("elytrafly-api-meta-");
@@ -129,8 +128,10 @@ public final class ApiSmoke {
     private static boolean hasMethod(Class<?> type, String name) {
         try { type.getMethod(name); return true; } catch (NoSuchMethodException e) { return false; }
     }
-    private static <T> T proxy(Class<T> type, java.lang.reflect.InvocationHandler handler) {
-        return type.cast(Proxy.newProxyInstance(ApiSmoke.class.getClassLoader(), new Class<?>[]{type}, handler));
+    /** JDK 17 dynamic proxies initialize method-signature API types, including registries that require a live server. */
+    private static <T> T mock(Class<T> type, java.lang.reflect.InvocationHandler handler) {
+        return org.mockito.Mockito.mock(type, invocation -> handler.invoke(
+                invocation.getMock(), invocation.getMethod(), invocation.getArguments()));
     }
     private static void check(boolean value, String description) {
         if (!value) throw new AssertionError(description);
